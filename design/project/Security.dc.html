@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ringkit — Security</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<style>
+body{margin:0;background:#0a0a0a}
+a{color:#6ee7b7}a:hover{color:#a7f3d0}
+a:focus-visible,button:focus-visible{outline:2px solid #6ee7b7;outline-offset:2px;border-radius:4px}
+.rk-nl{color:#a3a7ad;text-decoration:none}
+.rk-nl:hover{color:#ededed}
+.rk-btn{color:#0a0a0a;background:#6ee7b7}
+.rk-btn:hover{background:#a7f3d0;color:#0a0a0a}
+.rk-toc a{text-decoration:none}
+.rk-toc a:hover{text-decoration:underline}
+@media (max-width:760px){
+.rk-g2,.rk-g3{grid-template-columns:minmax(0,1fr) !important}
+.rk-g4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+.rk-fbrand{grid-column:1 / -1}
+.rk-h1{font-size:34px !important}
+.rk-main{padding-top:48px !important}
+.rk-panel{padding:22px 20px !important}
+}
+</style>
+</helmet>
+<div style="width:100%; min-height:100vh; font-family:Inter,sans-serif; color:#ededed; background:#0a0a0a; box-sizing:border-box; overflow-x:hidden; line-height:1.55">
+
+<header style="border-bottom:1px solid rgba(255,255,255,.09)">
+<nav aria-label="Main" style="max-width:1200px; margin:0 auto; padding:10px 16px; min-height:64px; box-sizing:border-box; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 24px">
+<a href="Main.dc.html" id="rk-logo" aria-label="Ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; letter-spacing:-.01em">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10h6"></path><path d="M8 10c1.5-3 3-4 4.5-2.5S15.5 6 18 5"></path><path d="M8 10c1.5 3 3 4 4.5 2.5S15.5 14 18 15"></path></svg>
+<span>ringkit</span>
+</a>
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:0 20px">
+<a href="Main.dc.html#how" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; font-weight:500">How it works</a>
+<a href="Pricing.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; font-weight:500">Pricing</a>
+<a href="Docs.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; font-weight:500">Docs</a>
+<a href="Signup.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; font-weight:500">Sign in</a>
+<a href="Signup.dc.html" class="rk-btn" style="display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 18px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none">Get started</a>
+</div>
+</nav>
+</header>
+
+<main class="rk-main" style="padding:72px 0 0">
+
+<div style="max-width:760px; margin:0 auto; padding:0 16px; box-sizing:border-box">
+<p style="margin:0 0 32px; padding:10px 14px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.5; color:#a3a7ad">Draft for review — not yet reviewed by counsel.</p>
+
+<p style="margin:0 0 12px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Security</p>
+<h1 class="rk-h1" style="margin:0 0 16px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:48px; line-height:1.1; letter-spacing:-.02em; color:#ededed">How Ringkit protects your calls and your data.</h1>
+<p style="margin:0 0 24px; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#a3a7ad">Effective: October 25, 2026</p>
+<p style="margin:0 0 32px; font-size:17px; line-height:1.7; color:#a3a7ad">Your phone line carries your customers' voices, your prices and your business brief. Here's how we keep that safe, what we've built, and what's still on the roadmap. Questions go to <a href="mailto:security@ringkit.ai">security@ringkit.ai</a>.</p>
+
+<nav aria-label="On this page" class="rk-toc" style="padding:20px 24px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+<p style="margin:0 0 8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">On this page</p>
+<ol class="rk-g2" style="margin:0; padding:0; list-style:none; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:0 24px; font-size:15px">
+<li><a href="#encryption" style="display:inline-flex; align-items:center; min-height:44px">Encryption</a></li>
+<li><a href="#access" style="display:inline-flex; align-items:center; min-height:44px">Access control</a></li>
+<li><a href="#recording" style="display:inline-flex; align-items:center; min-height:44px">Call recording &amp; consent</a></li>
+<li><a href="#data" style="display:inline-flex; align-items:center; min-height:44px">Data handling &amp; model use</a></li>
+<li><a href="#reliability" style="display:inline-flex; align-items:center; min-height:44px">Reliability</a></li>
+<li><a href="#porting" style="display:inline-flex; align-items:center; min-height:44px">Number porting</a></li>
+<li><a href="#disclosure" style="display:inline-flex; align-items:center; min-height:44px">Responsible disclosure</a></li>
+<li><a href="#roadmap" style="display:inline-flex; align-items:center; min-height:44px">Roadmap</a></li>
+</ol>
+</nav>
+</div>
+
+<div class="rk-g2" style="max-width:992px; margin:48px auto 0; padding:0 16px; box-sizing:border-box; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px">
+
+<section id="encryption" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><rect x="4" y="9" width="12" height="9" rx="1.5"></rect><path d="M7 9V6.5a3 3 0 0 1 6 0V9"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Encryption</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Your business brief, call recordings and summaries are encrypted at rest and in transit.</p>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px"><strong style="color:#ededed; font-weight:600">In transit:</strong> TLS 1.2 or higher for the API, the dashboard and webhook deliveries.</li>
+<li style="margin-bottom:6px"><strong style="color:#ededed; font-weight:600">At rest:</strong> AES-256 for recordings, transcripts, summaries and briefs.</li>
+<li>Encryption keys are managed separately from the data they protect, and access to them is restricted.</li>
+</ul>
+</section>
+
+<section id="access" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><circle cx="7" cy="13" r="3.5"></circle><path d="M9.5 10.5L17 3"></path><path d="M14 6l2.5 2.5"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Access control</h2>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px">Reps see only your brief and the live call — not your account, billing or call history.</li>
+<li style="margin-bottom:6px">Every access to customer data by Ringkit staff or reps is logged.</li>
+<li style="margin-bottom:6px">API keys are scoped by environment — <code style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ededed; background:#17181c; padding:1px 5px; border-radius:4px">rk_live_</code> for production, <code style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ededed; background:#17181c; padding:1px 5px; border-radius:4px">rk_test_</code> for testing — and you can rotate them any time.</li>
+<li>Webhooks are signed with HMAC-SHA256 so your server can verify every event came from Ringkit.</li>
+</ul>
+</section>
+
+<section id="recording" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><rect x="7.5" y="2.5" width="5" height="9" rx="2.5"></rect><path d="M4.5 9.5a5.5 5.5 0 0 0 11 0"></path><path d="M10 15v2.5"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Call recording &amp; consent</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Calls are recorded and transcribed to make the summary. Ringkit plays a consent notice on every call and follows two-party-consent rules by state.</p>
+<p style="margin:0; font-size:16px; line-height:1.65; color:#a3a7ad">You stay responsible for recording lawfully in your business and industry. See section 5 of our <a href="Terms.dc.html#recording">Terms</a>.</p>
+</section>
+
+<section id="data" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><ellipse cx="10" cy="5" rx="6" ry="2.5"></ellipse><path d="M4 5v10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5"></path><path d="M4 10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Data handling &amp; model use</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Your business brief, call recordings and summaries are encrypted at rest and in transit, and never used to train models for anyone else. The AI providers we use are bound by terms that bar training on your data.</p>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px">Recordings are kept 90 days by default; you can change that in settings.</li>
+<li style="margin-bottom:6px">Transcripts and summaries are kept until you delete them.</li>
+<li>Delete any call, or export everything, whenever you want. See our <a href="Privacy.dc.html#retention">Privacy Policy</a>.</li>
+</ul>
+</section>
+
+<section id="reliability" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><path d="M2 10h3.5l2-5 4 10 2-5H18"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Reliability</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Calls run on redundant carrier routes in multiple US regions. Status page and incident history are public.</p>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px">If one carrier route fails, calls move to another.</li>
+<li style="margin-bottom:6px">Call handling runs in more than one region, so a regional outage doesn't take your line down.</li>
+<li>Follow incidents as they happen on the <a href="#">status page</a>.</li>
+</ul>
+</section>
+
+<section id="porting" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><path d="M3 7h12"></path><path d="M12 4l3 3-3 3"></path><path d="M17 13H5"></path><path d="M8 10l-3 3 3 3"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Number porting</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Keep your existing number. Porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</p>
+<p style="margin:0; font-size:16px; line-height:1.65; color:#a3a7ad">Your number stays yours. If you leave, you can port it out to another provider and we'll release it promptly.</p>
+</section>
+
+<section id="disclosure" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><path d="M10 2.5l6 2.5v4.5c0 3.8-2.6 6.6-6 8-3.4-1.4-6-4.2-6-8V5z"></path><path d="M10 7v3.5"></path><path d="M10 13h.01"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Responsible disclosure</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">Found a vulnerability? Email <a href="mailto:security@ringkit.ai">security@ringkit.ai</a> with steps to reproduce. We'll acknowledge your report, keep you updated while we fix it, and credit you if you'd like.</p>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px">Don't access or change other customers' data.</li>
+<li style="margin-bottom:6px">Don't degrade the service or place calls to real people while testing.</li>
+<li>Give us reasonable time to fix the issue before you disclose it.</li>
+</ul>
+</section>
+
+<section id="roadmap" class="rk-panel" style="scroll-margin-top:24px; padding:28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; min-width:0">
+<svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#6ee7b7; display:block"><path d="M4 17.5V3"></path><path d="M4 3.5h10l-2 3.5 2 3.5H4"></path></svg>
+<h2 style="margin:14px 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; line-height:1.25; color:#ededed">Roadmap</h2>
+<p style="margin:0 0 12px; font-size:16px; line-height:1.65; color:#a3a7ad">We'd rather be clear about what isn't done yet.</p>
+<ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.65; color:#a3a7ad">
+<li style="margin-bottom:6px"><strong style="color:#ededed; font-weight:600">Independent security audit</strong> — planned before general availability.</li>
+<li style="margin-bottom:6px"><strong style="color:#ededed; font-weight:600">Single sign-on (SSO)</strong> — planned.</li>
+<li style="margin-bottom:6px"><strong style="color:#ededed; font-weight:600">Audit-log export</strong> — planned, so you can pull access logs into your own tools.</li>
+<li><strong style="color:#ededed; font-weight:600">Named subprocessor list</strong> — to be published alongside the Privacy Policy.</li>
+</ul>
+</section>
+
+</div>
+</main>
+
+<footer style="margin-top:96px; border-top:1px solid rgba(255,255,255,.09)">
+<div style="max-width:1200px; margin:0 auto; padding:48px 16px 32px; box-sizing:border-box">
+<div class="rk-g4" style="display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:32px">
+<div class="rk-fbrand">
+<a href="Main.dc.html" aria-label="Ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; letter-spacing:-.01em">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10h6"></path><path d="M8 10c1.5-3 3-4 4.5-2.5S15.5 6 18 5"></path><path d="M8 10c1.5 3 3 4 4.5 2.5S15.5 14 18 15"></path></svg>
+<span>ringkit</span>
+</a>
+<p style="margin:8px 0 0; font-size:14px; line-height:1.6; color:#a3a7ad; max-width:260px">Business phone infrastructure. Stripe for voice.</p>
+</div>
+<div>
+<p style="margin:0 0 4px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Product</p>
+<ul style="margin:0; padding:0; list-style:none; font-size:14px">
+<li><a href="Main.dc.html#how" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">How it works</a></li>
+<li><a href="Pricing.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Pricing</a></li>
+<li><a href="Docs.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Docs</a></li>
+<li><a href="Main.dc.html#integrations" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Integrations</a></li>
+</ul>
+</div>
+<div>
+<p style="margin:0 0 4px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Company</p>
+<ul style="margin:0; padding:0; list-style:none; font-size:14px">
+<li><a href="Security.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Security</a></li>
+<li><a href="#" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Status</a></li>
+<li><a href="#" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Work as a Ringkit rep</a></li>
+</ul>
+</div>
+<div>
+<p style="margin:0 0 4px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Legal</p>
+<ul style="margin:0; padding:0; list-style:none; font-size:14px">
+<li><a href="Terms.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Terms</a></li>
+<li><a href="Privacy.dc.html" class="rk-nl" style="display:inline-flex; align-items:center; min-height:44px">Privacy</a></li>
+</ul>
+</div>
+</div>
+<p style="margin:40px 0 0; padding-top:24px; border-top:1px solid rgba(255,255,255,.09); font-size:13px; color:#a3a7ad">© 2026 Ringkit</p>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2950}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

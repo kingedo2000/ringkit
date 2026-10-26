@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ringkit — Sign up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<style>
+body{margin:0;background:#0a0a0a}
+a{color:#6ee7b7}a:hover{color:#a7f3d0}
+.rk-navlink{color:#a3a7ad;text-decoration:none}
+.rk-navlink:hover{color:#ededed}
+.rk-btn-primary:hover{background:#a7f3d0 !important;color:#0a0a0a !important}
+.rk-btn-secondary:hover{border-color:rgba(255,255,255,.32) !important;color:#ededed !important}
+.rk-footlink{color:#a3a7ad;text-decoration:none}
+.rk-footlink:hover{color:#ededed}
+.rk-input:focus{outline:2px solid #6ee7b7;outline-offset:1px;border-color:#6ee7b7 !important}
+.rk-input::placeholder{color:#7d8187}
+.rk-btn-primary:focus-visible,.rk-btn-secondary:focus-visible,.rk-navlink:focus-visible,.rk-footlink:focus-visible{outline:2px solid #6ee7b7;outline-offset:2px}
+.rk-choice:hover{border-color:rgba(255,255,255,.2) !important}
+.rk-check{accent-color:#6ee7b7;width:20px;height:20px;margin:0;flex:none}
+.rk-stepi{color:#a3a7ad}
+.rk-stepi .rk-stepn{border-color:rgba(255,255,255,.16);color:#a3a7ad}
+.rk-stepi.rk-on{color:#ededed}
+.rk-stepi.rk-on .rk-stepn{border-color:#6ee7b7;color:#0a0a0a;background:#6ee7b7}
+.rk-stepi.rk-past .rk-stepn{border-color:#6ee7b7;color:#6ee7b7}
+[hidden]{display:none !important}
+@media (max-width:760px){
+.rk-g2,.rk-g3,.rk-g4,.rk-g5{grid-template-columns:minmax(0,1fr) !important}
+.rk-g5>*{grid-column:auto !important}
+.rk-pre{white-space:pre-wrap !important;word-break:break-word}
+.rk-hpad{padding-top:40px !important}
+.rk-stepper{gap:8px !important}
+.rk-steplabel{font-size:12px !important}
+}
+</style>
+
+<div style="width:100%; min-height:100vh; font-family:Inter,sans-serif; color:#ededed; background:#0a0a0a; box-sizing:border-box; overflow-x:hidden; line-height:1.55">
+
+<!-- NAV -->
+<header style="border-bottom:1px solid rgba(255,255,255,.09);">
+<nav aria-label="Main" style="max-width:1200px; margin:0 auto; padding:10px 16px; min-height:64px; box-sizing:border-box; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 24px;">
+<a href="index.html" id="rk-logo" aria-label="Ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; letter-spacing:-.01em;">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10H8"></path><path d="M8 10c2-4 3.5-4 5 0s3 4 5.5-1"></path><path d="M8 10c2 4 3.5 4 5 0s3-4 5.5 1"></path></svg>
+<span>ringkit</span>
+</a>
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:4px 20px; font-size:14px; font-weight:500;">
+<a class="rk-navlink" href="index.html#how" style="display:inline-flex; align-items:center; min-height:44px;">How it works</a>
+<a class="rk-navlink" href="pricing.html" style="display:inline-flex; align-items:center; min-height:44px;">Pricing</a>
+<a class="rk-navlink" href="docs.html" style="display:inline-flex; align-items:center; min-height:44px;">Docs</a>
+<a class="rk-navlink" href="signup.html" style="display:inline-flex; align-items:center; min-height:44px;">Sign in</a>
+<a class="rk-btn-primary" href="signup.html" style="display:inline-flex; align-items:center; min-height:44px; padding:0 16px; background:#6ee7b7; color:#0a0a0a; font-weight:600; border-radius:8px; text-decoration:none; box-sizing:border-box;">Get started</a>
+</div>
+</nav>
+</header>
+
+<main>
+<!-- INTRO -->
+<section class="rk-hpad" style="max-width:1200px; margin:0 auto; padding:56px 16px 24px; box-sizing:border-box;">
+<p style="margin:0 0 12px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Sign up · about 5 minutes</p>
+<h1 style="margin:0 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,5vw,44px); line-height:1.1; letter-spacing:-.02em;">Set up your phone line.</h1>
+<p style="margin:0; max-width:620px; color:#a3a7ad; font-size:17px;">Paste your website, pick a number, forward your calls. Bots for the easy calls, people for the ones that matter. You pay per minute only when calls come in.</p>
+</section>
+
+<!-- FLOW -->
+<section style="max-width:1200px; margin:0 auto; padding:16px 16px 72px; box-sizing:border-box;">
+<div class="rk-g5" style="display:grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap:24px; align-items:start;">
+
+<!-- LEFT: stepper + form -->
+<div style="grid-column:span 3; min-width:0;">
+
+<ol class="rk-stepper" aria-label="Sign-up progress" style="list-style:none; margin:0 0 20px; padding:0; display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px;">
+<li id="rk-stepper-1" class="" style="display:flex; align-items:center; gap:10px; min-width:0;">
+<span class="rk-stepn" style="flex:none; width:28px; height:28px; border-radius:50%; border:1px solid; display:inline-flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; box-sizing:border-box;">1</span>
+<span class="rk-steplabel" style="font-size:14px; font-weight:500; min-width:0;">Your site</span>
+</li>
+<li id="rk-stepper-2" class="" style="display:flex; align-items:center; gap:10px; min-width:0;">
+<span class="rk-stepn" style="flex:none; width:28px; height:28px; border-radius:50%; border:1px solid; display:inline-flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; box-sizing:border-box;">2</span>
+<span class="rk-steplabel" style="font-size:14px; font-weight:500; min-width:0;">Your number</span>
+</li>
+<li id="rk-stepper-3" class="" style="display:flex; align-items:center; gap:10px; min-width:0;">
+<span class="rk-stepn" style="flex:none; width:28px; height:28px; border-radius:50%; border:1px solid; display:inline-flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; box-sizing:border-box;">3</span>
+<span class="rk-steplabel" style="font-size:14px; font-weight:500; min-width:0;">Forward calls</span>
+</li>
+</ol>
+
+<div style="background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:28px 24px; box-sizing:border-box;">
+
+<!-- STEP 1 -->
+
+<section id="rk-step-1" aria-labelledby="rk-step-1-h">
+<p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Step 1 of 3</p>
+<h2 id="rk-step-1-h" style="margin:0 0 8px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; line-height:1.2;">Paste your site URL</h2>
+<p style="margin:0 0 24px; color:#a3a7ad; font-size:15px;">We read your site to build the brief your reps see: services, hours, service area, pricing.</p>
+
+<div style="display:flex; flex-direction:column; gap:18px;">
+<div style="display:flex; flex-direction:column; gap:6px;">
+<label for="rk-url" style="font-size:14px; font-weight:500;">Website URL</label>
+<input class="rk-input" id="rk-url" name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://hiddenvalleybuilders.com" style="min-height:48px; width:100%; box-sizing:border-box; padding:0 14px; background:#0a0a0a; border:1px solid rgba(255,255,255,.16); border-radius:8px; color:#ededed; font-family:'IBM Plex Mono',monospace; font-size:15px;">
+</div>
+<div class="rk-g2" style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:18px;">
+<div style="display:flex; flex-direction:column; gap:6px; min-width:0;">
+<label for="rk-email" style="font-size:14px; font-weight:500;">Email</label>
+<input class="rk-input" id="rk-email" name="email" type="email" autocomplete="email" placeholder="you@hiddenvalleybuilders.com" style="min-height:48px; width:100%; box-sizing:border-box; padding:0 14px; background:#0a0a0a; border:1px solid rgba(255,255,255,.16); border-radius:8px; color:#ededed; font-family:Inter,sans-serif; font-size:15px;">
+</div>
+<div style="display:flex; flex-direction:column; gap:6px; min-width:0;">
+<label for="rk-pass" style="font-size:14px; font-weight:500;">Password</label>
+<input class="rk-input" id="rk-pass" name="password" type="password" autocomplete="new-password" minlength="10" aria-describedby="rk-pass-hint" style="min-height:48px; width:100%; box-sizing:border-box; padding:0 14px; background:#0a0a0a; border:1px solid rgba(255,255,255,.16); border-radius:8px; color:#ededed; font-family:Inter,sans-serif; font-size:15px;">
+<span id="rk-pass-hint" style="font-size:13px; color:#a3a7ad;">At least 10 characters.</span>
+</div>
+</div>
+</div>
+
+<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-top:28px;">
+<a href="docs.html#quickstart" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none;">Developer? Skip to an API key →</a>
+<button id="rk-next-1" type="button" class="rk-btn-primary" style="min-height:44px; padding:0 22px; background:#6ee7b7; color:#0a0a0a; font-family:Inter,sans-serif; font-weight:600; font-size:15px; border:0; border-radius:8px; cursor:pointer;">Continue</button>
+</div>
+<p style="margin:16px 0 0; font-size:13px; color:#a3a7ad;">By continuing you agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+</section>
+
+
+<!-- STEP 2 -->
+
+<section id="rk-step-2" aria-labelledby="rk-step-2-h">
+<p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Step 2 of 3</p>
+<h2 id="rk-step-2-h" style="margin:0 0 20px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; line-height:1.2;">Get a number</h2>
+
+<fieldset style="border:0; margin:0; padding:0; display:flex; flex-direction:column; gap:12px;">
+<legend style="padding:0; margin:0 0 10px; font-size:14px; font-weight:500;">Which number should customers call?</legend>
+
+<div class="rk-choice" style="border:1px solid rgba(255,255,255,.09); border-radius:8px; background:#17181c; padding:14px 16px;">
+<div style="display:flex; align-items:center; gap:12px; min-height:44px;">
+<input class="rk-check" id="rk-num-new" type="radio" name="rk-num" value="new" checked>
+<label for="rk-num-new" style="font-size:15px; font-weight:500; cursor:pointer; flex:1; min-height:44px; display:flex; align-items:center;">Get a new local number</label>
+<span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">$1/mo</span>
+</div>
+
+<div id="rk-num-new-panel" style="display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px; padding:8px 0 4px 32px;">
+<div style="display:flex; flex-direction:column; gap:6px;">
+<label for="rk-area" style="font-size:13px; color:#a3a7ad;">Area code</label>
+<input class="rk-input" id="rk-area" name="area" type="text" inputmode="numeric" maxlength="3" pattern="[0-9]{3}" value="310" style="min-height:44px; width:96px; box-sizing:border-box; padding:0 12px; background:#0a0a0a; border:1px solid rgba(255,255,255,.16); border-radius:8px; color:#ededed; font-family:'IBM Plex Mono',monospace; font-size:15px;">
+</div>
+<div style="min-height:44px; display:flex; flex-direction:column; justify-content:flex-end;">
+<span style="font-size:12px; color:#a3a7ad;">Example number</span>
+<span id="rk-number-display" style="font-family:'IBM Plex Mono',monospace; font-size:18px; color:#6ee7b7;">(</span>
+</div>
+</div>
+
+</div>
+
+<div class="rk-choice" style="border:1px solid rgba(255,255,255,.09); border-radius:8px; background:#17181c; padding:14px 16px;">
+<div style="display:flex; align-items:center; gap:12px; min-height:44px;">
+<input class="rk-check" id="rk-num-keep" type="radio" name="rk-num" value="keep">
+<label for="rk-num-keep" style="font-size:15px; font-weight:500; cursor:pointer; flex:1; min-height:44px; display:flex; align-items:center;">Keep my existing number</label>
+<span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">free port</span>
+</div>
+
+<p id="rk-num-keep-panel" style="margin:4px 0 4px 32px; font-size:14px; color:#a3a7ad;">Keep your existing number. Porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</p>
+
+</div>
+</fieldset>
+
+<fieldset style="border:0; margin:28px 0 0; padding:0;">
+<legend style="padding:0; margin:0 0 4px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">Routing</legend>
+<p style="margin:0 0 12px; font-size:14px; color:#a3a7ad;">Change these any time.</p>
+<div style="border:1px solid rgba(255,255,255,.09); border-radius:8px; overflow:hidden;">
+<div style="display:flex; align-items:center; gap:12px; padding:6px 16px; min-height:52px; box-sizing:border-box; background:#17181c; border-bottom:1px solid rgba(255,255,255,.09);">
+<input class="rk-check" id="rk-route-ai" type="checkbox" checked>
+<label for="rk-route-ai" style="flex:1; min-width:0; min-height:44px; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; cursor:pointer; font-size:15px;"><span>Simple questions</span><span style="color:#a3a7ad;">→ AI</span></label>
+<span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:#6ee7b7; border:1px solid rgba(110,231,183,.4); border-radius:4px; padding:2px 6px;">AI</span>
+</div>
+<div style="display:flex; align-items:center; gap:12px; padding:6px 16px; min-height:52px; box-sizing:border-box; background:#17181c; border-bottom:1px solid rgba(255,255,255,.09);">
+<input class="rk-check" id="rk-route-rep" type="checkbox" checked>
+<label for="rk-route-rep" style="flex:1; min-width:0; min-height:44px; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; cursor:pointer; font-size:15px;"><span>Quotes &amp; scheduling</span><span style="color:#a3a7ad;">→ Ringkit reps</span></label>
+<span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:#f59e0b; border:1px solid rgba(245,158,11,.45); border-radius:4px; padding:2px 6px;">HUMAN</span>
+</div>
+<div style="display:flex; align-items:center; gap:12px; padding:6px 16px; min-height:52px; box-sizing:border-box; background:#17181c;">
+<input class="rk-check" id="rk-route-me" type="checkbox" checked>
+<label for="rk-route-me" style="flex:1; min-width:0; min-height:44px; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; cursor:pointer; font-size:15px;"><span>New jobs &amp; big customers</span><span style="color:#a3a7ad;">→ me</span></label>
+<span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:#f59e0b; border:1px solid rgba(245,158,11,.45); border-radius:4px; padding:2px 6px;">HUMAN</span>
+</div>
+</div>
+</fieldset>
+
+<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:28px;">
+<button id="rk-back-2" type="button" class="rk-btn-secondary" style="min-height:44px; padding:0 20px; background:transparent; color:#ededed; font-family:Inter,sans-serif; font-weight:500; font-size:15px; border:1px solid rgba(255,255,255,.16); border-radius:8px; cursor:pointer;">Back</button>
+<button id="rk-next-2" type="button" class="rk-btn-primary" style="min-height:44px; padding:0 22px; background:#6ee7b7; color:#0a0a0a; font-family:Inter,sans-serif; font-weight:600; font-size:15px; border:0; border-radius:8px; cursor:pointer;">Continue</button>
+</div>
+</section>
+
+
+<!-- STEP 3 -->
+
+<section id="rk-step-3" aria-labelledby="rk-step-3-h">
+<p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Step 3 of 3</p>
+<h2 id="rk-step-3-h" style="margin:0 0 8px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; line-height:1.2;">Forward your calls</h2>
+<p style="margin:0 0 16px; color:#a3a7ad; font-size:15px;">From the phone you use today, dial this code to send calls to Ringkit.</p>
+
+<div style="background:#0a0a0a; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:16px; overflow-x:auto;">
+<p style="margin:0 0 4px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Carrier forwarding code</p>
+<code id="rk-fwd-code" class="rk-pre" style="font-family:'IBM Plex Mono',monospace; font-size:22px; color:#6ee7b7; white-space:nowrap;">*72 (</code>
+</div>
+<p style="margin:10px 0 24px; font-size:14px; color:#a3a7ad;">or point your existing number at Ringkit in your carrier portal</p>
+
+<h3 style="margin:0 0 10px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">Before you go live</h3>
+<div style="display:flex; flex-direction:column; gap:12px;">
+<div style="display:flex; align-items:center; gap:12px; min-height:44px;">
+<input class="rk-check" id="rk-consent" type="checkbox" checked>
+<label for="rk-consent" style="flex:1; min-height:44px; display:flex; align-items:center; font-size:15px; cursor:pointer;">Play the recording consent notice on every call</label>
+</div>
+<div style="display:flex; flex-direction:column; gap:6px;">
+<label for="rk-notify" style="font-size:15px;">Send call summaries to (email or mobile for SMS)</label>
+<input class="rk-input" id="rk-notify" name="notify" type="text" autocomplete="email" placeholder="you@hiddenvalleybuilders.com or (805) 555-0118" style="min-height:48px; width:100%; box-sizing:border-box; padding:0 14px; background:#0a0a0a; border:1px solid rgba(255,255,255,.16); border-radius:8px; color:#ededed; font-family:Inter,sans-serif; font-size:15px;">
+</div>
+<div>
+<p style="margin:4px 0 8px; font-size:15px;">Connect your CRM <span style="color:#a3a7ad;">(optional)</span></p>
+<div style="display:flex; flex-wrap:wrap; gap:10px;">
+<button type="button" class="rk-btn-secondary" style="min-height:44px; padding:0 16px; background:transparent; color:#ededed; font-family:Inter,sans-serif; font-weight:500; font-size:14px; border:1px solid rgba(255,255,255,.16); border-radius:8px; cursor:pointer;">HubSpot</button>
+<button type="button" class="rk-btn-secondary" style="min-height:44px; padding:0 16px; background:transparent; color:#ededed; font-family:Inter,sans-serif; font-weight:500; font-size:14px; border:1px solid rgba(255,255,255,.16); border-radius:8px; cursor:pointer;">Jobber</button>
+<button type="button" class="rk-btn-secondary" style="min-height:44px; padding:0 16px; background:transparent; color:#ededed; font-family:Inter,sans-serif; font-weight:500; font-size:14px; border:1px solid rgba(255,255,255,.16); border-radius:8px; cursor:pointer;">Housecall Pro</button>
+</div>
+</div>
+</div>
+
+<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:28px;">
+<button id="rk-back-3" type="button" class="rk-btn-secondary" style="min-height:44px; padding:0 20px; background:transparent; color:#ededed; font-family:Inter,sans-serif; font-weight:500; font-size:15px; border:1px solid rgba(255,255,255,.16); border-radius:8px; cursor:pointer;">Back</button>
+<button id="rk-finish" type="button" class="rk-btn-primary" style="min-height:44px; padding:0 22px; background:#6ee7b7; color:#0a0a0a; font-family:Inter,sans-serif; font-weight:600; font-size:15px; border:0; border-radius:8px; cursor:pointer;">Finish and go live</button>
+</div>
+<p style="margin:16px 0 0; font-size:13px; color:#a3a7ad;">Calls are recorded and transcribed to make the summary. Ringkit plays a consent notice on every call and follows two-party-consent rules by state.</p>
+<p style="margin:8px 0 0; font-size:13px; color:#a3a7ad;">By continuing you agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+</section>
+
+
+<!-- DONE -->
+
+<section id="rk-done" aria-labelledby="rk-done-h" tabindex="-1">
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+<h2 id="rk-done-h" style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:28px; line-height:1.2;">You're live</h2>
+</div>
+<p style="margin:0 0 20px; color:#a3a7ad; font-size:15px;">Forwarded calls now ring Ringkit. Every call becomes a summary in your inbox, with tasks and proposals ready to send.</p>
+<div style="border:1px solid rgba(255,255,255,.09); border-radius:8px; overflow:hidden; font-size:15px;">
+<div style="display:flex; justify-content:space-between; gap:12px; padding:12px 16px; background:#17181c; border-bottom:1px solid rgba(255,255,255,.09);"><span>Number</span><span style="font-family:'IBM Plex Mono',monospace; color:#6ee7b7;">$1/mo</span></div>
+<div style="display:flex; justify-content:space-between; gap:12px; padding:12px 16px; background:#17181c; border-bottom:1px solid rgba(255,255,255,.09);"><span>AI answering</span><span style="font-family:'IBM Plex Mono',monospace; color:#6ee7b7;">$0.05/min</span></div>
+<div style="display:flex; justify-content:space-between; gap:12px; padding:12px 16px; background:#17181c; border-bottom:1px solid rgba(255,255,255,.09);"><span style="display:inline-flex; align-items:center; gap:8px;">Live rep <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:#f59e0b; border:1px solid rgba(245,158,11,.45); border-radius:4px; padding:1px 6px;">HUMAN</span></span><span style="font-family:'IBM Plex Mono',monospace; color:#f59e0b;">$0.50/min</span></div>
+<div style="display:flex; justify-content:space-between; gap:12px; padding:12px 16px; background:#17181c;"><span>Platform fee</span><span style="font-family:'IBM Plex Mono',monospace; color:#6ee7b7;">$0 · no contracts</span></div>
+</div>
+<p style="margin:12px 0 20px; font-size:13px; color:#a3a7ad;">Billed per minute, rounded up to the next minute. Call notes and summaries are included.</p>
+<div style="display:flex; flex-wrap:wrap; gap:12px;">
+<a class="rk-btn-primary" href="index.html" style="display:inline-flex; align-items:center; min-height:44px; padding:0 20px; background:#6ee7b7; color:#0a0a0a; font-weight:600; border-radius:8px; text-decoration:none;">Go to dashboard</a>
+<a class="rk-btn-secondary" href="docs.html" style="display:inline-flex; align-items:center; min-height:44px; padding:0 20px; border:1px solid rgba(255,255,255,.16); color:#ededed; border-radius:8px; text-decoration:none;">Read the docs</a>
+</div>
+</section>
+
+
+</div>
+</div>
+
+<!-- RIGHT: preview -->
+<aside id="rk-preview" aria-labelledby="rk-preview-h" style="grid-column:span 2; min-width:0; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:24px; box-sizing:border-box;">
+<p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">What Ringkit learned</p>
+<h2 id="rk-preview-h" style="margin:0 0 4px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px;">Your brief</h2>
+<p style="margin:0 0 16px; font-size:13px; color:#a3a7ad;">Reps and AI see this before they pick up.</p>
+<dl style="margin:0; font-size:14px; border-top:1px solid rgba(255,255,255,.09);">
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Business</dt><dd style="margin:2px 0 0;">Hidden Valley Builders</dd></div>
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Services</dt><dd style="margin:2px 0 0;">remodels, additions, repairs</dd></div>
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Hours</dt><dd style="margin:2px 0 0;">Mon–Sat 7–5</dd></div>
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Service area</dt><dd style="margin:2px 0 0;">Ventura County</dd></div>
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Pricing</dt><dd style="margin:2px 0 0;">$95/hr labor · free estimates</dd></div>
+<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.09);"><dt style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad;">Open jobs</dt><dd style="margin:2px 0 0;">synced from Jobber</dd></div>
+</dl>
+
+<h3 style="margin:20px 0 10px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px;">Routing</h3>
+<ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:14px;">
+<li style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; background:#17181c; border:1px solid rgba(255,255,255,.09); border-radius:8px;"><span style="min-width:0;">Simple questions</span><span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6ee7b7;">AI</span></li>
+<li style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; background:#17181c; border:1px solid rgba(255,255,255,.09); border-radius:8px;"><span style="min-width:0;">Quotes &amp; scheduling</span><span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#f59e0b;">Ringkit reps</span></li>
+<li style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; background:#17181c; border:1px solid rgba(255,255,255,.09); border-radius:8px;"><span style="min-width:0;">New jobs &amp; big customers</span><span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#f59e0b;">You</span></li>
+</ul>
+<p style="margin:16px 0 0; font-size:13px; color:#a3a7ad;">Your business brief, call recordings and summaries are encrypted at rest and in transit, and never used to train models for anyone else.</p>
+</aside>
+
+</div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(255,255,255,.09);">
+<div style="max-width:1200px; margin:0 auto; padding:48px 16px 32px; box-sizing:border-box;">
+<div class="rk-g4" style="display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:32px;">
+<div>
+<a href="index.html" aria-label="Ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px;">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10H8"></path><path d="M8 10c2-4 3.5-4 5 0s3 4 5.5-1"></path><path d="M8 10c2 4 3.5 4 5 0s3-4 5.5 1"></path></svg>
+<span>ringkit</span>
+</a>
+<p style="margin:8px 0 0; font-size:14px; color:#a3a7ad;">Business phone infrastructure. Stripe for voice.</p>
+</div>
+<div>
+<p style="margin:0 0 8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Product</p>
+<ul style="list-style:none; margin:0; padding:0; font-size:14px;">
+<li><a class="rk-footlink" href="index.html#how" style="display:inline-flex; align-items:center; min-height:44px;">How it works</a></li>
+<li><a class="rk-footlink" href="pricing.html" style="display:inline-flex; align-items:center; min-height:44px;">Pricing</a></li>
+<li><a class="rk-footlink" href="docs.html" style="display:inline-flex; align-items:center; min-height:44px;">Docs</a></li>
+<li><a class="rk-footlink" href="index.html#integrations" style="display:inline-flex; align-items:center; min-height:44px;">Integrations</a></li>
+</ul>
+</div>
+<div>
+<p style="margin:0 0 8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Company</p>
+<ul style="list-style:none; margin:0; padding:0; font-size:14px;">
+<li><a class="rk-footlink" href="security.html" style="display:inline-flex; align-items:center; min-height:44px;">Security</a></li>
+<li><a class="rk-footlink" href="#" style="display:inline-flex; align-items:center; min-height:44px;">Status</a></li>
+<li><a class="rk-footlink" href="#" style="display:inline-flex; align-items:center; min-height:44px;">Work as a Ringkit rep</a></li>
+</ul>
+</div>
+<div>
+<p style="margin:0 0 8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad;">Legal</p>
+<ul style="list-style:none; margin:0; padding:0; font-size:14px;">
+<li><a class="rk-footlink" href="terms.html" style="display:inline-flex; align-items:center; min-height:44px;">Terms</a></li>
+<li><a class="rk-footlink" href="privacy.html" style="display:inline-flex; align-items:center; min-height:44px;">Privacy</a></li>
+</ul>
+</div>
+</div>
+<p style="margin:32px 0 0; font-size:13px; color:#a3a7ad;">© 2026 Ringkit</p>
+</div>
+</footer>
+
+</div>
+
+<script>
+/* Ringkit sign-up flow: static-site wiring (no deps). */
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+
+  function init() {
+    var steps = [$("rk-step-1"), $("rk-step-2"), $("rk-step-3")];
+    var done = $("rk-done");
+    var markers = [$("rk-stepper-1"), $("rk-stepper-2"), $("rk-stepper-3")];
+    if (!steps[0]) return;
+
+    function show(step, isDone) {
+      for (var i = 0; i < steps.length; i++) {
+        if (steps[i]) steps[i].hidden = isDone || (i + 1) !== step;
+      }
+      if (done) done.hidden = !isDone;
+      for (var j = 0; j < markers.length; j++) {
+        var m = markers[j];
+        if (!m) continue;
+        var n = j + 1;
+        m.classList.add("rk-stepi");
+        m.classList.toggle("rk-on", !isDone && n === step);
+        m.classList.toggle("rk-past", isDone || n < step);
+        if (!isDone && n === step) m.setAttribute("aria-current", "step");
+        else m.removeAttribute("aria-current");
+      }
+      var target = isDone ? done : steps[step - 1];
+      if (target) {
+        var h = target.querySelector("h2");
+        if (h) {
+          h.setAttribute("tabindex", "-1");
+          try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); }
+        }
+        if (target.getBoundingClientRect().top < 0) target.scrollIntoView({ block: "start" });
+      }
+    }
+
+    function on(id, fn) {
+      var el = $(id);
+      if (el) el.addEventListener("click", function (e) { e.preventDefault(); fn(); });
+    }
+
+    on("rk-next-1", function () { show(2, false); });
+    on("rk-back-2", function () { show(1, false); });
+    on("rk-next-2", function () { show(3, false); });
+    on("rk-back-3", function () { show(2, false); });
+    on("rk-finish", function () { show(3, true); });
+
+    // Number choice: new local number vs keep existing.
+    var numNew = $("rk-num-new");
+    var numKeep = $("rk-num-keep");
+    var newPanel = $("rk-num-new-panel");
+    var keepPanel = $("rk-num-keep-panel");
+    function syncNum() {
+      var keep = !!(numKeep && numKeep.checked);
+      if (newPanel) newPanel.hidden = keep;
+      if (keepPanel) keepPanel.hidden = !keep;
+    }
+    if (numNew) numNew.addEventListener("change", syncNum);
+    if (numKeep) numKeep.addEventListener("change", syncNum);
+
+    // Area code drives the illustrative number and forwarding code.
+    var area = $("rk-area");
+    var numDisplay = $("rk-number-display");
+    var fwd = $("rk-fwd-code");
+    function syncArea() {
+      var v = area ? String(area.value).replace(/[^0-9]/g, "").slice(0, 3) : "";
+      if (v.length !== 3) v = "310";
+      var num = "(" + v + ") 555-0142";
+      if (numDisplay) numDisplay.textContent = num;
+      if (fwd) fwd.textContent = "*72 " + num;
+    }
+    if (area) area.addEventListener("input", syncArea);
+
+    syncNum();
+    syncArea();
+    show(1, false);
+    // Do not steal focus on first load.
+    if (document.activeElement && document.activeElement.tagName === "H2") document.activeElement.blur();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ringkit — Docs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<style>
+body{margin:0;background:#0a0a0a}
+a{color:#6ee7b7}a:hover{color:#a7f3d0}
+.rk-nav-link{color:#a3a7ad;text-decoration:none}
+.rk-nav-link:hover{color:#ededed}
+.rk-btn-primary:hover{background:#a7f3d0;color:#0a0a0a}
+.rk-foot a{color:#a3a7ad;text-decoration:none}
+.rk-foot a:hover{color:#ededed}
+.rk-side a{color:#a3a7ad;text-decoration:none}
+.rk-side a:hover{color:#ededed}
+.rk-side a:focus-visible,.rk-nav-link:focus-visible,.rk-btn-primary:focus-visible{outline:2px solid #6ee7b7;outline-offset:2px}
+.rk-doc h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:30px;line-height:1.2;margin:0 0 12px;color:#ededed}
+.rk-doc h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;margin:32px 0 8px;color:#ededed}
+.rk-doc p{color:#a3a7ad;margin:0 0 14px;font-size:16px}
+.rk-doc p strong,.rk-doc li strong{color:#ededed;font-weight:600}
+.rk-doc ul{color:#a3a7ad;margin:0 0 14px;padding-left:20px}
+.rk-doc li{margin:0 0 6px}
+.rk-doc pre{margin:0 0 16px;background:#121316;border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:16px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.6;color:#ededed}
+.rk-doc pre code{font-family:inherit;font-size:inherit}
+.rk-doc code{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#ededed}
+.rk-doc p code,.rk-doc li code,.rk-doc td code{background:#17181c;border:1px solid rgba(255,255,255,.09);border-radius:4px;padding:1px 5px}
+.rk-doc table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.rk-doc th{text-align:left;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#a3a7ad;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.09);background:#121316}
+.rk-doc td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.09);color:#a3a7ad;vertical-align:top}
+.rk-doc tr:last-child td{border-bottom:0}
+.rk-label{display:block;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#a3a7ad;margin:0 0 6px}
+.rk-m-post{color:#6ee7b7}
+.rk-m-get{color:#ededed}
+.rk-m-patch{color:#ededed}
+@media (max-width:760px){
+.rk-g2{grid-template-columns:minmax(0,1fr) !important}
+.rk-side-list{flex-direction:row !important;flex-wrap:wrap !important;gap:4px 14px !important}
+.rk-side{position:static !important}
+.rk-doc h2{font-size:25px}
+.rk-doc pre.rk-wrap{white-space:pre-wrap;word-break:break-word}
+.rk-foot-cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important}
+}
+</style>
+</helmet>
+<div style="width:100%; min-height:100vh; font-family:Inter,sans-serif; color:#ededed; background:#0a0a0a; box-sizing:border-box; overflow-x:hidden; line-height:1.55">
+
+<!-- NAV -->
+<header style="border-bottom:1px solid rgba(255,255,255,.09)">
+  <nav aria-label="Main" style="max-width:1200px; margin:0 auto; padding:10px 16px; min-height:64px; box-sizing:border-box; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 24px">
+    <a href="Main.dc.html" id="rk-logo" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; letter-spacing:-.01em; min-height:44px">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 10h6"></path><path d="M7 10c2-4 4-4 6-4s3 1 6 0"></path><path d="M7 10c2 4 4 4 6 4s3-1 6 0"></path></svg>
+      <span>ringkit</span>
+    </a>
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:4px 20px; font-size:14px; font-weight:500">
+      <a class="rk-nav-link" href="Main.dc.html#how" style="display:inline-flex; align-items:center; min-height:44px">How it works</a>
+      <a class="rk-nav-link" href="Pricing.dc.html" style="display:inline-flex; align-items:center; min-height:44px">Pricing</a>
+      <a class="rk-nav-link" href="Docs.dc.html" aria-current="page" style="display:inline-flex; align-items:center; min-height:44px; color:#ededed">Docs</a>
+      <a class="rk-nav-link" href="Signup.dc.html" style="display:inline-flex; align-items:center; min-height:44px">Sign in</a>
+      <a class="rk-btn-primary" href="Signup.dc.html" style="display:inline-flex; align-items:center; min-height:44px; padding:0 18px; background:#6ee7b7; color:#0a0a0a; font-weight:600; border-radius:8px; text-decoration:none">Get started</a>
+    </div>
+  </nav>
+</header>
+
+<!-- DOCS BODY -->
+<div style="max-width:1200px; margin:0 auto; padding:40px 16px 96px; box-sizing:border-box; display:flex; flex-wrap:wrap; align-items:flex-start; gap:32px 56px">
+
+  <!-- SIDEBAR -->
+  <aside class="rk-side" aria-label="Docs sections" style="flex:1 1 240px; max-width:100%; position:sticky; top:24px; align-self:flex-start; box-sizing:border-box">
+    <span class="rk-label" style="display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad; margin:0 0 10px">Documentation</span>
+    <div class="rk-side-list" style="display:flex; flex-direction:column; gap:0; font-size:14px; font-weight:500">
+      <a href="#quickstart" style="display:flex; align-items:center; min-height:40px">Quickstart</a>
+      <a href="#concepts" style="display:flex; align-items:center; min-height:40px">Concepts</a>
+      <a href="#api" style="display:flex; align-items:center; min-height:40px">REST API reference</a>
+      <a href="#sdks" style="display:flex; align-items:center; min-height:40px">SDKs</a>
+      <a href="#webhooks" style="display:flex; align-items:center; min-height:40px">Webhooks</a>
+      <a href="#sandbox" style="display:flex; align-items:center; min-height:40px">Sandbox</a>
+      <a href="#agents" style="display:flex; align-items:center; min-height:40px">Agent frameworks &amp; MCP</a>
+      <a href="#errors" style="display:flex; align-items:center; min-height:40px">Rate limits &amp; errors</a>
+    </div>
+    <div style="margin-top:20px; padding:14px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; font-size:13px; color:#a3a7ad">
+      <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#ededed; margin-bottom:4px">API version v1</span>
+      Base URL <span style="font-family:'IBM Plex Mono',monospace; color:#6ee7b7; word-break:break-all">api.ringkit.ai/v1</span>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="rk-doc" style="flex:999 1 560px; min-width:0; max-width:100%">
+
+    <div style="margin-bottom:56px">
+      <span class="rk-label">Ringkit docs</span>
+      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:44px; line-height:1.1; letter-spacing:-.02em; margin:0 0 14px">Build on the phone layer</h1>
+      <p style="font-size:18px; max-width:680px">Ringkit gives your app or agent a phone number, answers every inbound call, and routes it to a bot or the right tier of human. Every call comes back as a structured summary over webhooks. Bots for the easy calls, people for the ones that matter.</p>
+    </div>
+
+    <!-- QUICKSTART -->
+    <section id="quickstart" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">01 · Quickstart</span>
+      <h2>Quickstart</h2>
+      <p>Four steps from zero to a live, routed line. Most teams finish in <strong>under an hour</strong> with this quickstart. Grab a test key (<code>rk_test_…</code>) from the dashboard first; nothing below costs money in sandbox.</p>
+
+      <h3>1. Install the SDK</h3>
+      <span class="rk-label">Node</span>
+      <pre><code>npm install ringkit</code></pre>
+      <span class="rk-label">Python</span>
+      <pre><code>pip install ringkit</code></pre>
+
+      <h3>2. Create a line with your brief</h3>
+      <p>A line is a phone number plus everything the AI needs to know about your business, plus the rules for who handles what. Ringkit reads your site and syncs open jobs from your CRM to build the brief.</p>
+      <span class="rk-label">JavaScript</span>
+      <pre><code>import Ringkit from "ringkit";
+const ringkit = new Ringkit(process.env.RINGKIT_API_KEY);
+
+const line = await ringkit.lines.create({
+  business: "Hidden Valley Builders",
+  brief: {
+    site: "https://hiddenvalleybuilders.example",
+    crm: { provider: "jobber", connection_id: "conn_8f2c" },
+  },
+  route: {
+    simple: "ai",
+    quotes: "ringkit-reps",
+    new_jobs: "owner",
+  },
+});
+
+console.log(line.number); // +18055550142</code></pre>
+      <span class="rk-label">Python</span>
+      <pre><code>import os
+from ringkit import Ringkit
+
+ringkit = Ringkit(os.environ["RINGKIT_API_KEY"])
+
+line = ringkit.lines.create(
+    business="Hidden Valley Builders",
+    brief={
+        "site": "https://hiddenvalleybuilders.example",
+        "crm": {"provider": "jobber", "connection_id": "conn_8f2c"},
+    },
+    route={
+        "simple": "ai",
+        "quotes": "ringkit-reps",
+        "new_jobs": "owner",
+    },
+)
+
+print(line.number)  # +18055550142</code></pre>
+
+      <h3>3. Forward your number, or use the new one</h3>
+      <p>Point your existing business number at <code>line.number</code> with your carrier's call forwarding, or publish the new number directly. To move the number over for good, use <a href="#api">POST /numbers/port</a>. Keep your existing number: porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</p>
+
+      <h3>4. Receive webhooks</h3>
+      <p>Register an HTTPS endpoint and Ringkit will post each call's routing decision, completion and summary to it.</p>
+      <pre><code>await ringkit.webhooks.create({
+  url: "https://hiddenvalleybuilders.example/hooks/ringkit",
+  events: ["call.routed", "call.completed", "call.summarized"],
+});</code></pre>
+      <p>Call your new number from any phone. Within a minute of hanging up you'll get a <code>call.summarized</code> event with the intent, the details the caller gave, and suggested next actions.</p>
+    </section>
+
+    <!-- CONCEPTS -->
+    <section id="concepts" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">02 · Concepts</span>
+      <h2>Concepts</h2>
+      <p>Four objects cover almost everything you'll build.</p>
+      <div class="rk-g2" style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; margin-top:20px">
+        <div style="background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:20px">
+          <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7; margin-bottom:6px">line</span>
+          <h3 style="margin:0 0 8px">Lines</h3>
+          <p style="margin:0; font-size:15px">A phone number with a brief and a routing table attached. One business can have several lines, for example a main line and a separate after-hours or service line.</p>
+        </div>
+        <div style="background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:20px">
+          <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7; margin-bottom:6px">brief</span>
+          <h3 style="margin:0 0 8px">Briefs</h3>
+          <p style="margin:0 0 8px; font-size:15px">What the AI and reps know before they pick up:</p>
+          <ul style="margin:0; font-size:15px">
+            <li>Your site, services and service area (e.g. Ventura County)</li>
+            <li>Hours and holiday schedule</li>
+            <li>Pricing (e.g. $95/hr labor · free estimates)</li>
+            <li>Open jobs and customers, synced via your CRM</li>
+          </ul>
+        </div>
+        <div style="background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:20px">
+          <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7; margin-bottom:6px">route</span>
+          <h3 style="margin:0 0 8px">Routes</h3>
+          <p style="margin:0 0 8px; font-size:15px">Map each call intent to a tier. Tiers, from first line to last:</p>
+          <ul style="margin:0; font-size:15px">
+            <li><code>ai</code>: hours, directions, status of an existing job</li>
+            <li><code>ringkit-reps</code>: <span style="color:#f59e0b">live reps</span> briefed on your business</li>
+            <li><code>your-team</code>: rings your staff's phones in order</li>
+            <li><code>owner</code>: rings you directly</li>
+          </ul>
+        </div>
+        <div style="background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px; padding:20px">
+          <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7; margin-bottom:6px">summary</span>
+          <h3 style="margin:0 0 8px">Summaries</h3>
+          <p style="margin:0; font-size:15px">Every call produces a summary: intent, extracted entities (name, address, job, budget), next actions and a recording link. Summaries are included at no extra cost and are delivered by webhook or fetched with <code>GET /calls/:id/summary</code>.</p>
+        </div>
+      </div>
+      <p style="margin-top:16px; font-size:14px">If a tier doesn't answer within its timeout (default 20s), the call falls through to the next tier you've listed. Calls are recorded and transcribed to make the summary. Ringkit plays a consent notice on every call and follows two-party-consent rules by state.</p>
+    </section>
+
+    <!-- API -->
+    <section id="api" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">03 · REST API</span>
+      <h2>REST API reference</h2>
+      <p>All requests go to the base URL below over HTTPS, with JSON bodies. Authenticate with a secret key in the <code>Authorization</code> header. Live keys start with <code>rk_live_</code>, test keys with <code>rk_test_</code>.</p>
+      <pre class="rk-wrap"><code>Base URL   https://api.ringkit.ai/v1
+Header     Authorization: Bearer rk_live_…</code></pre>
+
+      <div style="overflow-x:auto; border:1px solid rgba(255,255,255,.09); border-radius:8px; margin:20px 0 8px">
+        <table>
+          <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code class="rk-m-post">POST</code></td><td><code>/lines</code></td><td>Create a line with a brief and routes</td></tr>
+            <tr><td><code class="rk-m-get">GET</code></td><td><code>/lines/:id</code></td><td>Retrieve a line, its brief status and routes</td></tr>
+            <tr><td><code class="rk-m-patch">PATCH</code></td><td><code>/lines/:id</code></td><td>Update the brief, routes or hours</td></tr>
+            <tr><td><code class="rk-m-post">POST</code></td><td><code>/calls</code></td><td>Place an outbound call from a line</td></tr>
+            <tr><td><code class="rk-m-get">GET</code></td><td><code>/calls/:id</code></td><td>Retrieve call status, duration, tier and cost</td></tr>
+            <tr><td><code class="rk-m-get">GET</code></td><td><code>/calls/:id/summary</code></td><td>Retrieve the structured summary for a call</td></tr>
+            <tr><td><code class="rk-m-post">POST</code></td><td><code>/numbers</code></td><td>Buy a new number ($1/mo)</td></tr>
+            <tr><td><code class="rk-m-post">POST</code></td><td><code>/numbers/port</code></td><td>Start a free port of an existing number</td></tr>
+            <tr><td><code class="rk-m-get">GET</code></td><td><code>/reps/tiers</code></td><td>List rep tiers available to your account</td></tr>
+            <tr><td><code class="rk-m-post">POST</code></td><td><code>/webhooks</code></td><td>Register a webhook endpoint and events</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>POST /lines</h3>
+      <span class="rk-label">Request</span>
+      <pre><code>curl https://api.ringkit.ai/v1/lines \
+  -H "Authorization: Bearer rk_test_4eC39HqLyjWDarjt" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "business": "Hidden Valley Builders",
+    "area_code": "805",
+    "brief": { "site": "https://hiddenvalleybuilders.example" },
+    "route": { "simple": "ai", "quotes": "ringkit-reps", "new_jobs": "owner" }
+  }'</code></pre>
+      <span class="rk-label">Response · 201</span>
+      <pre><code>{
+  "id": "line_01JB7Q2X9M",
+  "object": "line",
+  "number": "+18055550142",
+  "business": "Hidden Valley Builders",
+  "brief": { "status": "building", "sources": ["site"] },
+  "route": { "simple": "ai", "quotes": "ringkit-reps", "new_jobs": "owner" },
+  "created": "2026-10-25T17:04:11Z"
+}</code></pre>
+
+      <h3>POST /calls</h3>
+      <p>Place an outbound call. Set <code>handled_by</code> to <code>"ai"</code> for an agent-run call or <code>"rep"</code> to have a briefed Ringkit rep make it.</p>
+      <span class="rk-label">Request</span>
+      <pre><code>{
+  "line": "line_01JB7Q2X9M",
+  "to": "+18055550199",
+  "handled_by": "ai",
+  "goal": "Confirm Thursday 9am site visit for the Oakridge kitchen remodel",
+  "metadata": { "job_id": "J-2291" }
+}</code></pre>
+      <span class="rk-label">Response · 201</span>
+      <pre><code>{
+  "id": "call_01JB7R5KDT",
+  "object": "call",
+  "direction": "outbound",
+  "status": "queued",
+  "line": "line_01JB7Q2X9M",
+  "to": "+18055550199",
+  "handled_by": "ai",
+  "metadata": { "job_id": "J-2291" }
+}</code></pre>
+
+      <h3>GET /calls/:id/summary</h3>
+      <span class="rk-label">Response · 200</span>
+      <pre><code>{
+  "call": "call_01JB7S0P4A",
+  "summary": "Homeowner in Thousand Oaks wants a quote to extend the Oakridge kitchen remodel to the dining room. Agreed to an $18,400 estimate pending a site visit.",
+  "intent": "quote",
+  "entities": {
+    "name": "Dana Ruiz",
+    "address": "1840 Oakridge Ln, Thousand Oaks, CA",
+    "job_id": "J-2291",
+    "amount": 18400
+  },
+  "next_actions": [
+    { "type": "proposal", "title": "Send revised $18,400 estimate" },
+    { "type": "task", "title": "Book site visit", "due": "2026-10-30" }
+  ],
+  "handled_by": "rep",
+  "tier": "ringkit-reps",
+  "duration_seconds": 352,
+  "cost": { "minutes": 6, "amount": "3.00", "currency": "usd" }
+}</code></pre>
+    </section>
+
+    <!-- SDKS -->
+    <section id="sdks" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">04 · SDKs</span>
+      <h2>SDKs</h2>
+      <p>Official libraries for Node (18+) and Python (3.9+). Both are typed, retry idempotent requests automatically, and read <code>RINGKIT_API_KEY</code> from the environment if you don't pass a key.</p>
+
+      <h3>Create a line</h3>
+      <span class="rk-label">JavaScript</span>
+      <pre><code>const line = await ringkit.lines.create({
+  business: "Hidden Valley Builders",
+  brief: { site: "https://hiddenvalleybuilders.example" },
+  route: { simple: "ai", quotes: "ringkit-reps", new_jobs: "owner" },
+});</code></pre>
+      <span class="rk-label">Python</span>
+      <pre><code>line = ringkit.lines.create(
+    business="Hidden Valley Builders",
+    brief={"site": "https://hiddenvalleybuilders.example"},
+    route={"simple": "ai", "quotes": "ringkit-reps", "new_jobs": "owner"},
+)</code></pre>
+
+      <h3>Place a call</h3>
+      <span class="rk-label">JavaScript</span>
+      <pre><code>const call = await ringkit.calls.create({
+  line: line.id,
+  to: "+18055550199",
+  handled_by: "rep",
+  goal: "Walk the customer through the $18,400 estimate",
+});</code></pre>
+      <span class="rk-label">Python</span>
+      <pre><code>call = ringkit.calls.create(
+    line=line.id,
+    to="+18055550199",
+    handled_by="rep",
+    goal="Walk the customer through the $18,400 estimate",
+)</code></pre>
+
+      <h3>Fetch a summary</h3>
+      <span class="rk-label">JavaScript</span>
+      <pre><code>const summary = await ringkit.calls.summary("call_01JB7S0P4A");
+for (const action of summary.next_actions) console.log(action.title);</code></pre>
+      <span class="rk-label">Python</span>
+      <pre><code>summary = ringkit.calls.summary("call_01JB7S0P4A")
+for action in summary.next_actions:
+    print(action.title)</code></pre>
+    </section>
+
+    <!-- WEBHOOKS -->
+    <section id="webhooks" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">05 · Webhooks</span>
+      <h2>Webhooks</h2>
+      <p>Ringkit posts JSON to your endpoint for each event. Respond with any <code>2xx</code> within 10 seconds; failed deliveries retry with exponential backoff for up to 72 hours.</p>
+
+      <div style="overflow-x:auto; border:1px solid rgba(255,255,255,.09); border-radius:8px; margin:16px 0 24px">
+        <table>
+          <thead><tr><th>Event</th><th>Sent when</th></tr></thead>
+          <tbody>
+            <tr><td><code>call.routed</code></td><td>The AI has classified the call and picked a tier</td></tr>
+            <tr><td><code>call.completed</code></td><td>The call has ended; includes duration and cost</td></tr>
+            <tr><td><code>call.summarized</code></td><td>The summary, entities and next actions are ready</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>call.routed</h3>
+      <pre><code>{
+  "id": "evt_01JB7S0R2C",
+  "type": "call.routed",
+  "data": {
+    "call": "call_01JB7S0P4A",
+    "line": "line_01JB7Q2X9M",
+    "from": "+18055550173",
+    "intent": "quote",
+    "tier": "ringkit-reps",
+    "handled_by": "rep"
+  }
+}</code></pre>
+
+      <h3>call.completed</h3>
+      <pre><code>{
+  "id": "evt_01JB7S6V8N",
+  "type": "call.completed",
+  "data": {
+    "call": "call_01JB7S0P4A",
+    "duration_seconds": 352,
+    "handled_by": "rep",
+    "tier": "ringkit-reps",
+    "cost": { "minutes": 6, "amount": "3.00", "currency": "usd" }
+  }
+}</code></pre>
+
+      <h3>call.summarized</h3>
+      <pre><code>{
+  "id": "evt_01JB7S7F1Q",
+  "type": "call.summarized",
+  "data": {
+    "call": "call_01JB7S0P4A",
+    "summary": "Wants a quote to extend the Oakridge kitchen remodel to the dining room.",
+    "intent": "quote",
+    "entities": { "name": "Dana Ruiz", "job_id": "J-2291", "amount": 18400 },
+    "next_actions": [
+      { "type": "proposal", "title": "Send revised $18,400 estimate" },
+      { "type": "task", "title": "Book site visit", "due": "2026-10-30" }
+    ],
+    "recording_url": "https://api.ringkit.ai/v1/recordings/rec_01JB7S6W",
+    "consent": true,
+    "handled_by": "rep",
+    "tier": "ringkit-reps"
+  }
+}</code></pre>
+
+      <h3>Verify signatures</h3>
+      <p>Every request carries a <code>Ringkit-Signature</code> header: <code>t=&lt;timestamp&gt;,v1=&lt;hex&gt;</code>, where <code>v1</code> is an HMAC-SHA256 of <code>timestamp + "." + raw_body</code> keyed with your endpoint's signing secret (<code>whsec_…</code>). Reject requests older than five minutes, and compare with a constant-time function.</p>
+      <pre><code>import crypto from "node:crypto";
+
+function verify(rawBody, header, secret) {
+  const parts = Object.fromEntries(header.split(",").map((p) =&gt; p.split("=")));
+  if (Date.now() / 1000 - Number(parts.t) &gt; 300) return false;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(parts.t + "." + rawBody)
+    .digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(parts.v1));
+}</code></pre>
+      <p>The SDKs wrap this as <code>ringkit.webhooks.verify(rawBody, header, secret)</code>.</p>
+    </section>
+
+    <!-- SANDBOX -->
+    <section id="sandbox" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">06 · Sandbox</span>
+      <h2>Sandbox</h2>
+      <p>Every account gets a sandbox. Use an <code>rk_test_</code> key and every request runs against it; no real calls are placed and nothing is billed.</p>
+      <ul>
+        <li><strong>Sandbox numbers are free.</strong> <code>POST /numbers</code> with a test key returns a number in the reserved <code>+1 555 01xx</code> range.</li>
+        <li><strong>Simulated callers.</strong> Trigger a scripted inbound call with <code>POST /sandbox/calls</code> and a scenario: <code>quote</code>, <code>new_job</code>, <code>existing_job_status</code>, <code>after_hours</code> or <code>wrong_number</code>.</li>
+        <li><strong>Real webhooks.</strong> Sandbox calls fire the same <code>call.routed</code>, <code>call.completed</code> and <code>call.summarized</code> events, with <code>"livemode": false</code>.</li>
+      </ul>
+      <pre><code>curl https://api.ringkit.ai/v1/sandbox/calls \
+  -H "Authorization: Bearer rk_test_4eC39HqLyjWDarjt" \
+  -d line=line_01JB7Q2X9M \
+  -d scenario=quote</code></pre>
+    </section>
+
+    <!-- AGENTS -->
+    <section id="agents" style="scroll-margin-top:24px; margin-bottom:72px">
+      <span class="rk-label">07 · Agents</span>
+      <h2>Agent frameworks &amp; MCP</h2>
+      <p>Ringkit is built so agents can place and take calls without a telecom project. Each API operation is exposed as a tool with a typed schema, so it drops into OpenAI Agents, LangChain, Vercel AI SDK and MCP. An agent can create a line, place a call with a goal, wait for <code>call.summarized</code>, and act on <code>next_actions</code>. Calls that need a person still go to a person: set <code>handled_by: "rep"</code> or route to <code>your-team</code>. To use Ringkit from any MCP client, add the server to its config:</p>
+      <pre><code>{
+  "mcpServers": {
+    "ringkit": {
+      "command": "npx",
+      "args": ["-y", "@ringkit/mcp"],
+      "env": { "RINGKIT_API_KEY": "rk_test_…" }
+    }
+  }
+}</code></pre>
+    </section>
+
+    <!-- ERRORS -->
+    <section id="errors" style="scroll-margin-top:24px">
+      <span class="rk-label">08 · Limits</span>
+      <h2>Rate limits &amp; errors</h2>
+      <p>Default limits are 100 requests per second per key and 50 concurrent outbound calls per account. Responses include <code>RateLimit-Remaining</code> and <code>RateLimit-Reset</code> headers. Errors return a JSON body: <code>{ "error": { "type", "code", "message" } }</code>.</p>
+      <div style="overflow-x:auto; border:1px solid rgba(255,255,255,.09); border-radius:8px; margin-top:16px">
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>400</code></td><td><code>invalid_request</code></td><td>Missing or malformed parameter; <code>param</code> names it</td></tr>
+            <tr><td><code>401</code></td><td><code>unauthorized</code></td><td>Missing, revoked or wrong-mode API key</td></tr>
+            <tr><td><code>402</code></td><td><code>payment_required</code></td><td>No payment method on file for live usage</td></tr>
+            <tr><td><code>404</code></td><td><code>not_found</code></td><td>No object with that id in this mode</td></tr>
+            <tr><td><code>409</code></td><td><code>number_unavailable</code></td><td>Number already taken or a port is in progress</td></tr>
+            <tr><td><code>422</code></td><td><code>route_invalid</code></td><td>A route points to a tier your account can't use</td></tr>
+            <tr><td><code>429</code></td><td><code>rate_limited</code></td><td>Too many requests; retry after <code>RateLimit-Reset</code></td></tr>
+            <tr><td><code>5xx</code></td><td><code>api_error</code></td><td>Ringkit-side failure; safe to retry with an <code>Idempotency-Key</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="rk-foot" style="border-top:1px solid rgba(255,255,255,.09)">
+  <div style="max-width:1200px; margin:0 auto; padding:48px 16px 40px; box-sizing:border-box; display:flex; flex-wrap:wrap; gap:32px 64px; justify-content:space-between">
+    <div style="flex:1 1 260px; max-width:360px">
+      <a href="Main.dc.html" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#6ee7b7; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; min-height:44px">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 10h6"></path><path d="M7 10c2-4 4-4 6-4s3 1 6 0"></path><path d="M7 10c2 4 4 4 6 4s3-1 6 0"></path></svg>
+        <span style="color:#6ee7b7">ringkit</span>
+      </a>
+      <p style="color:#a3a7ad; font-size:14px; margin:8px 0 16px">Business phone infrastructure. Stripe for voice.</p>
+      <p style="color:#a3a7ad; font-size:13px; margin:0">© 2026 Ringkit</p>
+    </div>
+    <div class="rk-foot-cols" style="flex:1 1 420px; display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:24px; font-size:14px">
+      <div>
+        <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed; margin-bottom:8px">Product</span>
+        <a href="Main.dc.html#how" style="display:flex; align-items:center; min-height:44px">How it works</a>
+        <a href="Pricing.dc.html" style="display:flex; align-items:center; min-height:44px">Pricing</a>
+        <a href="Docs.dc.html" style="display:flex; align-items:center; min-height:44px">Docs</a>
+        <a href="Main.dc.html#integrations" style="display:flex; align-items:center; min-height:44px">Integrations</a>
+      </div>
+      <div>
+        <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed; margin-bottom:8px">Company</span>
+        <a href="Security.dc.html" style="display:flex; align-items:center; min-height:44px">Security</a>
+        <a href="#" style="display:flex; align-items:center; min-height:44px">Status</a>
+        <a href="#" style="display:flex; align-items:center; min-height:44px">Work as a Ringkit rep</a>
+      </div>
+      <div>
+        <span style="display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed; margin-bottom:8px">Legal</span>
+        <a href="Terms.dc.html" style="display:flex; align-items:center; min-height:44px">Terms</a>
+        <a href="Privacy.dc.html" style="display:flex; align-items:center; min-height:44px">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":9200}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

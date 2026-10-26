@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ringkit — Business phone infrastructure</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<style>
+body{margin:0;background:#0a0a0a}
+a{color:#6ee7b7}a:hover{color:#a7f3d0}
+*{box-sizing:border-box}
+
+/* view wrappers: inline display must never beat [hidden] */
+[data-rk-view][hidden]{display:none !important}
+
+/* hero: one soft mint glow */
+.rk-horizon{background-image:radial-gradient(ellipse at center, rgba(110,231,183,.07) 0%, rgba(110,231,183,.025) 40%, transparent 70%)}
+
+/* blinking cursor */
+.rk-cursor{display:inline-block;width:8px;height:16px;background:#6ee7b7;vertical-align:-3px;animation:rk-blink 1.05s steps(1) infinite}
+@keyframes rk-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+/* active triage node: border breathes */
+.rk-pulse{animation:rk-pulse 2.4s ease-in-out infinite}
+@keyframes rk-pulse{0%,100%{border-color:rgba(110,231,183,.4)}50%{border-color:rgba(110,231,183,.9)}}
+
+/* signal travelling along connectors */
+.rk-signal{position:relative;overflow:hidden}
+.rk-signal::after{content:"";position:absolute;top:-1px;left:-30%;width:30%;height:3px;background:linear-gradient(90deg,transparent,#6ee7b7,transparent);animation:rk-signal 2.2s linear infinite}
+@keyframes rk-signal{from{left:-30%}to{left:100%}}
+
+.rk-hair{height:1px;background:rgba(255,255,255,.09)}
+
+/* buttons, links, cards */
+.rk-btn{transition:background .15s ease,color .15s ease,border-color .15s ease}
+.rk-btn-primary:hover{background:#a7f3d0 !important;border-color:#a7f3d0 !important;color:#0a0a0a !important}
+.rk-btn-ghost:hover{border-color:rgba(255,255,255,.32) !important;color:#ededed !important;background:rgba(255,255,255,.04) !important}
+.rk-nav-link:hover{color:#ededed !important}
+.rk-foot-link:hover{color:#ededed !important}
+.rk-card{transition:border-color .2s ease}
+.rk-card:hover{border-color:rgba(110,231,183,.35) !important}
+a:focus-visible,button:focus-visible{outline:2px solid #6ee7b7;outline-offset:3px}
+
+/* owners / developers segmented control */
+.rk-seg{transition:background .15s ease,color .15s ease;cursor:pointer}
+.rk-seg:hover{color:#ededed !important}
+.rk-seg[aria-pressed="true"]{background:#6ee7b7 !important;color:#0a0a0a !important}
+
+/* ============ HERO CALL FLOW ============
+   20s master loop = two 10s halves (half 1 = AI branch, mint; half 2 = live-rep branch, amber).
+     0–11%   / 50–61%   call ring lit, 3 ripples expand; caption A (1–43%) / caption B (51–93%)
+     8–13%   / 58–63%   light travels call -> AI triage
+     12.5–23%/ 62.5–73% triage lit; data chips fade in at 14/16/18% (64/66/68%), out at 43% (93%)
+     21–23%  / 71–73%   light on shared trunk out of triage
+     23–28%             light up + right to AI assistant (mint)   | 73–78% light down + right to live rep (amber)
+     28–45%             AI node lit, rep dimmed                   | 78–95% rep lit, AI dimmed
+     30–34%             light AI -> merge point                   | 80–84% light rep -> merge point
+     34–35.5% / 84–85.5% light into outcome slot
+     35.5–46.5%         ticket A flips in, holds, fades           | 85.5–96.5% ticket B flips in (flash), holds, fades
+     96.5–100%          quiet reset, loop */
+.rk-cf-anim{animation-duration:20s;animation-iteration-count:infinite;animation-timing-function:linear}
+.rk-cf-line{position:absolute;background:rgba(255,255,255,.12)}
+.rk-cf-rider{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;pointer-events:none}
+.rk-cf-dot{position:absolute;left:-4px;top:-4px;width:9px;height:9px;border-radius:50%;background:#6ee7b7}
+.rk-cf-dot-amber{background:#f59e0b}
+.rk-cf-tail{position:absolute;right:4px;top:4px;width:44px;height:1px;background:linear-gradient(90deg,transparent,#6ee7b7)}
+.rk-cf-tail-amber{background:linear-gradient(90deg,transparent,#f59e0b)}
+.rk-cf-r-a{animation-name:rk-cf-r-a}.rk-cf-r-t{animation-name:rk-cf-r-t}
+.rk-cf-r-u2{animation-name:rk-cf-r-u2}.rk-cf-r-u3{animation-name:rk-cf-r-u3}.rk-cf-r-u4{animation-name:rk-cf-r-u4}.rk-cf-r-u5{animation-name:rk-cf-r-u5}
+.rk-cf-r-l2{animation-name:rk-cf-r-l2}.rk-cf-r-l3{animation-name:rk-cf-r-l3}.rk-cf-r-l4{animation-name:rk-cf-r-l4}.rk-cf-r-l5{animation-name:rk-cf-r-l5}
+.rk-cf-r-f{animation-name:rk-cf-r-f}
+.rk-cf-capa{opacity:0;animation-name:rk-cf-capa}.rk-cf-capb{opacity:0;animation-name:rk-cf-capb}
+.rk-cf-chip1{opacity:0;animation-name:rk-cf-chip1}.rk-cf-chip2{opacity:0;animation-name:rk-cf-chip2}.rk-cf-chip3{opacity:0;animation-name:rk-cf-chip3}
+.rk-cf-callglow{opacity:.2;animation-name:rk-cf-callglow}
+.rk-cf-triglow{opacity:.2;animation-name:rk-cf-triglow}
+.rk-cf-aiglow{opacity:0;animation-name:rk-cf-aiglow}.rk-cf-repglow{opacity:0;animation-name:rk-cf-repglow}
+.rk-cf-aidim{opacity:.6;animation-name:rk-cf-aidim}.rk-cf-repdim{opacity:.6;animation-name:rk-cf-repdim}
+.rk-cf-tka{opacity:0;animation-name:rk-cf-tka}.rk-cf-tkb{opacity:0;animation-name:rk-cf-tkb}
+.rk-cf-flash{opacity:0;animation-name:rk-cf-flash}
+.rk-cf-spin{animation-name:rk-cf-spin}
+.rk-cf-rip1{opacity:0;animation-name:rk-cf-rip1}.rk-cf-rip2{opacity:0;animation-name:rk-cf-rip2}.rk-cf-rip3{opacity:0;animation-name:rk-cf-rip3}
+@keyframes rk-cf-r-a{0%{transform:translateX(0);opacity:0} 8%{transform:translateX(0);opacity:0} 8.3%{opacity:1} 13%{transform:translateX(100%);opacity:1} 13.3%{transform:translateX(100%);opacity:0} 13.4%{transform:translateX(0);opacity:0} 58%{transform:translateX(0);opacity:0} 58.3%{opacity:1} 63%{transform:translateX(100%);opacity:1} 63.3%{transform:translateX(100%);opacity:0} 63.4%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-t{0%{transform:translateX(0);opacity:0} 21%{transform:translateX(0);opacity:0} 21.3%{opacity:1} 23%{transform:translateX(100%);opacity:1} 23.3%{transform:translateX(100%);opacity:0} 23.4%{transform:translateX(0);opacity:0} 71%{transform:translateX(0);opacity:0} 71.3%{opacity:1} 73%{transform:translateX(100%);opacity:1} 73.3%{transform:translateX(100%);opacity:0} 73.4%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-u2{0%{transform:translateY(100%);opacity:0} 23%{transform:translateY(100%);opacity:0} 23.3%{opacity:1} 25.5%{transform:translateY(0);opacity:1} 25.8%{transform:translateY(0);opacity:0} 25.9%{transform:translateY(100%);opacity:0} 100%{transform:translateY(100%);opacity:0}}
+@keyframes rk-cf-r-u3{0%{transform:translateX(0);opacity:0} 25.5%{transform:translateX(0);opacity:0} 25.8%{opacity:1} 28%{transform:translateX(100%);opacity:1} 28.3%{transform:translateX(100%);opacity:0} 28.4%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-l2{0%{transform:translateY(0);opacity:0} 73%{transform:translateY(0);opacity:0} 73.3%{opacity:1} 75.5%{transform:translateY(100%);opacity:1} 75.8%{transform:translateY(100%);opacity:0} 75.9%{transform:translateY(0);opacity:0} 100%{transform:translateY(0);opacity:0}}
+@keyframes rk-cf-r-l3{0%{transform:translateX(0);opacity:0} 75.5%{transform:translateX(0);opacity:0} 75.8%{opacity:1} 78%{transform:translateX(100%);opacity:1} 78.3%{transform:translateX(100%);opacity:0} 78.4%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-u4{0%{transform:translateX(0);opacity:0} 30%{transform:translateX(0);opacity:0} 30.3%{opacity:1} 31.5%{transform:translateX(100%);opacity:1} 31.8%{transform:translateX(100%);opacity:0} 31.9%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-u5{0%{transform:translateY(0);opacity:0} 31.5%{transform:translateY(0);opacity:0} 31.8%{opacity:1} 34%{transform:translateY(100%);opacity:1} 34.3%{transform:translateY(100%);opacity:0} 34.4%{transform:translateY(0);opacity:0} 100%{transform:translateY(0);opacity:0}}
+@keyframes rk-cf-r-l4{0%{transform:translateX(0);opacity:0} 80%{transform:translateX(0);opacity:0} 80.3%{opacity:1} 81.5%{transform:translateX(100%);opacity:1} 81.8%{transform:translateX(100%);opacity:0} 81.9%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-r-l5{0%{transform:translateY(100%);opacity:0} 81.5%{transform:translateY(100%);opacity:0} 81.8%{opacity:1} 84%{transform:translateY(0);opacity:1} 84.3%{transform:translateY(0);opacity:0} 84.4%{transform:translateY(100%);opacity:0} 100%{transform:translateY(100%);opacity:0}}
+@keyframes rk-cf-r-f{0%{transform:translateX(0);opacity:0} 34%{transform:translateX(0);opacity:0} 34.3%{opacity:1} 35.5%{transform:translateX(100%);opacity:1} 35.8%{transform:translateX(100%);opacity:0} 35.9%{transform:translateX(0);opacity:0} 84%{transform:translateX(0);opacity:0} 84.3%{opacity:1} 85.5%{transform:translateX(100%);opacity:1} 85.8%{transform:translateX(100%);opacity:0} 85.9%{transform:translateX(0);opacity:0} 100%{transform:translateX(0);opacity:0}}
+@keyframes rk-cf-capa{0%{opacity:0} 1%{opacity:0} 2.5%{opacity:1} 43%{opacity:1} 44.5%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-capb{0%{opacity:0} 51%{opacity:0} 52.5%{opacity:1} 93%{opacity:1} 94.5%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-chip1{0%{opacity:0} 14%{opacity:0} 15%{opacity:1} 43%{opacity:1} 44%{opacity:0} 64%{opacity:0} 65%{opacity:1} 93%{opacity:1} 94%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-chip2{0%{opacity:0} 16%{opacity:0} 17%{opacity:1} 43%{opacity:1} 44%{opacity:0} 66%{opacity:0} 67%{opacity:1} 93%{opacity:1} 94%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-chip3{0%{opacity:0} 18%{opacity:0} 19%{opacity:1} 43%{opacity:1} 44%{opacity:0} 68%{opacity:0} 69%{opacity:1} 93%{opacity:1} 94%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-callglow{0%{opacity:0.2} 1%{opacity:1} 12%{opacity:1} 13%{opacity:0.2} 50%{opacity:0.2} 51%{opacity:1} 62%{opacity:1} 63%{opacity:0.2} 100%{opacity:0.2}}
+@keyframes rk-cf-triglow{0%{opacity:0.2} 12.5%{opacity:0.2} 13.3%{opacity:1} 23%{opacity:1} 23.8%{opacity:0.2} 62.5%{opacity:0.2} 63.3%{opacity:1} 73%{opacity:1} 73.8%{opacity:0.2} 100%{opacity:0.2}}
+@keyframes rk-cf-aiglow{0%{opacity:0} 28%{opacity:0} 29%{opacity:1} 45%{opacity:1} 46%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-repglow{0%{opacity:0} 78%{opacity:0} 79%{opacity:1} 95%{opacity:1} 96%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-aidim{0%{opacity:.6} 28%{opacity:.6} 29%{opacity:1} 45%{opacity:1} 47%{opacity:.6} 73%{opacity:.6} 75%{opacity:.3} 95%{opacity:.3} 97%{opacity:.6} 100%{opacity:.6}}
+@keyframes rk-cf-repdim{0%{opacity:.6} 23%{opacity:.6} 25%{opacity:.3} 45%{opacity:.3} 47%{opacity:.6} 78%{opacity:.6} 79%{opacity:1} 95%{opacity:1} 97%{opacity:.6} 100%{opacity:.6}}
+@keyframes rk-cf-tka{0%{opacity:0;transform:translateX(18px) rotateY(70deg)} 35.5%{opacity:0;transform:translateX(18px) rotateY(70deg)} 37%{opacity:1;transform:translateX(0) rotateY(0deg)} 45%{opacity:1;transform:translateX(0) rotateY(0deg)} 46.5%{opacity:0;transform:translateX(-10px) rotateY(0deg)} 100%{opacity:0;transform:translateX(-10px) rotateY(0deg)}}
+@keyframes rk-cf-tkb{0%{opacity:0;transform:translateX(18px) rotateY(70deg)} 85.5%{opacity:0;transform:translateX(18px) rotateY(70deg)} 87%{opacity:1;transform:translateX(0) rotateY(0deg)} 95%{opacity:1;transform:translateX(0) rotateY(0deg)} 96.5%{opacity:0;transform:translateX(-10px) rotateY(0deg)} 100%{opacity:0;transform:translateX(-10px) rotateY(0deg)}}
+@keyframes rk-cf-flash{0%{opacity:0} 86.5%{opacity:0} 87.2%{opacity:.7} 89.5%{opacity:0} 100%{opacity:0}}
+@keyframes rk-cf-spin{0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)}}
+@keyframes rk-cf-rip1{0%{transform:scale(1);opacity:0} 0.2%{transform:scale(1);opacity:.8} 7%{transform:scale(2.1);opacity:0} 50%{transform:scale(1);opacity:0} 50.2%{transform:scale(1);opacity:.8} 57%{transform:scale(2.1);opacity:0} 100%{transform:scale(1);opacity:0}}
+@keyframes rk-cf-rip2{0%{transform:scale(1);opacity:0} 2%{transform:scale(1);opacity:0} 2.2%{transform:scale(1);opacity:.8} 9%{transform:scale(2.1);opacity:0} 52%{transform:scale(1);opacity:0} 52.2%{transform:scale(1);opacity:.8} 59%{transform:scale(2.1);opacity:0} 100%{transform:scale(1);opacity:0}}
+@keyframes rk-cf-rip3{0%{transform:scale(1);opacity:0} 4%{transform:scale(1);opacity:0} 4.2%{transform:scale(1);opacity:.8} 11%{transform:scale(2.1);opacity:0} 54%{transform:scale(1);opacity:0} 54.2%{transform:scale(1);opacity:.8} 61%{transform:scale(2.1);opacity:0} 100%{transform:scale(1);opacity:0}}
+@media (min-width:761px) and (max-width:1080px){
+  .rk-cf-wrap{width:728px !important;height:266px !important}
+  .rk-cf-stage{transform:scale(.7)}
+}
+@media (max-width:760px){
+  .rk-cf-wrap{width:100% !important;height:auto !important;margin-top:40px !important}
+  .rk-cf-stage{display:none !important}
+  .rk-cf-mobile{display:flex !important}
+}
+@media (prefers-reduced-motion:reduce){
+  .rk-cf-anim{animation:none !important}
+  .rk-cf-rider,.rk-cf-capa,.rk-cf-tka,.rk-cf-flash,.rk-cf-rip1,.rk-cf-rip2,.rk-cf-rip3{opacity:0 !important}
+  .rk-cf-capb,.rk-cf-chip1,.rk-cf-chip2,.rk-cf-chip3,.rk-cf-callglow,.rk-cf-triglow,.rk-cf-aidim,.rk-cf-repdim{opacity:1 !important}
+  .rk-cf-aiglow,.rk-cf-repglow{opacity:.55 !important}
+  .rk-cf-tkb{opacity:1 !important;transform:none !important}
+  .rk-cursor,.rk-pulse,.rk-signal::after{animation:none !important}
+  .rk-btn,.rk-card,.rk-seg{transition:none !important}
+}
+
+/* responsive */
+@media (max-width:760px){
+  .rk-g2,.rk-g3,.rk-g4{grid-template-columns:repeat(1, minmax(0, 1fr)) !important}
+  .rk-flow{flex-direction:column !important;align-items:stretch !important}
+  .rk-conn-h{width:1px !important;height:32px !important;margin:0 auto !important;min-width:0 !important;flex:0 0 32px !important}
+  .rk-outs{width:100% !important;flex:1 1 auto !important}
+  .rk-out-conn{display:none !important}
+  .rk-hero-pad{padding-top:40px !important;padding-bottom:56px !important}
+  .rk-section{padding-top:64px !important;padding-bottom:64px !important}
+  .rk-nav-links{width:100%;justify-content:flex-start !important}
+  .rk-pane2{border-left:0 !important;border-top:1px solid rgba(255,255,255,.09)}
+  .rk-code{white-space:pre-wrap !important;word-break:break-word}
+  .rk-price-row{flex-direction:column !important;align-items:flex-start !important}
+}
+@media (min-width:761px) and (max-width:1080px){
+  .rk-g4{grid-template-columns:repeat(2, minmax(0, 1fr)) !important}
+}
+</style>
+</helmet>
+<div style="width:100%; min-height:100vh; font-family:Inter,sans-serif; color:#ededed; background:#0a0a0a; box-sizing:border-box; overflow-x:hidden; line-height:1.55">
+
+<!-- ============ NAV (shared) ============ -->
+<header style="position:relative; z-index:5; border-bottom:1px solid rgba(255,255,255,.09); background:#0a0a0a">
+  <nav aria-label="Primary" style="max-width:1200px; margin:0 auto; min-height:64px; padding:10px 16px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px">
+    <a id="rk-logo" href="Main.dc.html" aria-label="ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 10h5"></path><path d="M6.5 10c2 0 2.6-4 5-4s2.6 1.6 5 1.6"></path><path d="M6.5 10c2 0 2.6 4 5 4s2.6-1.6 5-1.6"></path></svg>
+      <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:21px; letter-spacing:-0.02em; color:#6ee7b7">ringkit</span>
+    </a>
+    <div class="rk-nav-links" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:4px">
+      <a href="Main.dc.html#how" class="rk-nav-link" style="display:inline-flex; align-items:center; min-height:44px; padding:0 12px; font-family:Inter,sans-serif; font-size:14px; font-weight:500; text-decoration:none; color:#a3a7ad">How it works</a>
+      <a href="Pricing.dc.html" class="rk-nav-link" style="display:inline-flex; align-items:center; min-height:44px; padding:0 12px; font-family:Inter,sans-serif; font-size:14px; font-weight:500; text-decoration:none; color:#a3a7ad">Pricing</a>
+      <a href="Docs.dc.html" class="rk-nav-link" style="display:inline-flex; align-items:center; min-height:44px; padding:0 12px; font-family:Inter,sans-serif; font-size:14px; font-weight:500; text-decoration:none; color:#a3a7ad">Docs</a>
+      <a href="Signup.dc.html" class="rk-nav-link" style="display:inline-flex; align-items:center; min-height:44px; padding:0 12px; font-family:Inter,sans-serif; font-size:14px; font-weight:500; text-decoration:none; color:#a3a7ad">Sign in</a>
+      <a href="Signup.dc.html" class="rk-btn rk-btn-primary" style="display:inline-flex; align-items:center; min-height:44px; padding:0 16px; margin-left:6px; border:1px solid #6ee7b7; border-radius:8px; background:#6ee7b7; font-family:Inter,sans-serif; font-size:14px; font-weight:600; text-decoration:none; color:#0a0a0a">Get started</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section style="position:relative; overflow:hidden; border-bottom:1px solid rgba(255,255,255,.09)">
+  <div aria-hidden="true" class="rk-horizon" style="position:absolute; left:50%; top:52%; width:1400px; height:420px; margin-left:-700px; pointer-events:none"></div>
+
+  <div class="rk-hero-pad" style="position:relative; max-width:1200px; margin:0 auto; padding:56px 16px 112px; display:flex; flex-direction:column; align-items:center; text-align:center">
+
+    <!-- audience switch -->
+    <div role="group" aria-label="Show Ringkit for" style="display:inline-flex; align-items:center; gap:4px; padding:4px; margin-bottom:48px; border:1px solid rgba(255,255,255,.09); border-radius:8px; background:#121316">
+      <button type="button" id="rk-seg-owners" class="rk-seg" aria-pressed="{{ownersPressed}}" onClick="{{ showOwners }}" style="min-height:44px; padding:0 18px; border:0; border-radius:6px; background:transparent; font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:#a3a7ad">Owners</button>
+      <button type="button" id="rk-seg-devs" class="rk-seg" aria-pressed="{{devsPressed}}" onClick="{{ showDevs }}" style="min-height:44px; padding:0 18px; border:0; border-radius:6px; background:transparent; font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:#a3a7ad">Developers</button>
+    </div>
+
+    <!-- OWNERS VIEW -->
+    <div data-rk-view="owners" style="width:100%">
+    <sc-if value="{{isOwners}}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex; flex-direction:column; align-items:center; text-align:center">
+        <p style="margin:0 0 20px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">BRIEFED REPS, ON DEMAND</p>
+        <h1 style="margin:0; max-width:900px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(36px, 7vw, 64px); line-height:1.08; letter-spacing:-0.015em; color:#ededed">Your phone, answered.<br>By people who know your business.</h1>
+        <p style="margin:24px 0 0; max-width:620px; font-size:19px; color:#a3a7ad">Real people on demand, briefed by AI on your business before they pick up. No contracts, no platform fee — a number is $1 a month, then you pay only per minute.</p>
+        <p style="margin:14px 0 0; max-width:620px; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.02em; color:#a3a7ad">Plug it into your website, your app, or your AI agent in under an hour with the quickstart.</p>
+        <div style="margin-top:36px; display:flex; flex-wrap:wrap; justify-content:center; gap:14px">
+          <a href="Signup.dc.html" class="rk-btn rk-btn-primary" style="display:inline-flex; align-items:center; gap:10px; min-height:52px; padding:0 22px; border:1px solid #6ee7b7; border-radius:8px; background:#6ee7b7; font-family:Inter,sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#0a0a0a">
+            Get started
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="#how" class="rk-btn rk-btn-ghost" style="display:inline-flex; align-items:center; min-height:52px; padding:0 22px; border:1px solid rgba(255,255,255,.16); border-radius:8px; background:transparent; font-family:Inter,sans-serif; font-size:15px; font-weight:500; text-decoration:none; color:#ededed">See how it works</a>
+        </div>
+
+        <!-- animated call flow (CSS-only, 20s loop; see timeline comment in helmet) -->
+        <div class="rk-cf-wrap" role="img" aria-label="An incoming call is read by AI, routed to an AI assistant or a briefed live rep, and becomes an outcome: an answered question or a booked $18,400 estimate." style="position:relative; width:1040px; max-width:100%; height:380px; margin:56px auto 0; text-align:left">
+         <div class="rk-cf-stage" style="position:absolute; left:0; top:0; width:1040px; height:380px; transform-origin:left top">
+          <div class="rk-cf-line" style="left:146px; top:190px; width:184px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-a"><div class="rk-cf-dot"><span class="rk-cf-tail"></span></div></div></div>
+          <div class="rk-cf-line" style="left:430px; top:190px; width:40px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-t"><div class="rk-cf-dot"><span class="rk-cf-tail"></span></div></div></div>
+          <div class="rk-cf-line" style="left:470px; top:80px; width:1px; height:110px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-u2"><div class="rk-cf-dot"></div></div></div>
+          <div class="rk-cf-line" style="left:470px; top:80px; width:90px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-u3"><div class="rk-cf-dot"><span class="rk-cf-tail"></span></div></div></div>
+          <div class="rk-cf-line" style="left:470px; top:190px; width:1px; height:110px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-l2"><div class="rk-cf-dot rk-cf-dot-amber"></div></div></div>
+          <div class="rk-cf-line" style="left:470px; top:300px; width:90px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-l3"><div class="rk-cf-dot rk-cf-dot-amber"><span class="rk-cf-tail rk-cf-tail-amber"></span></div></div></div>
+          <div class="rk-cf-line" style="left:760px; top:80px; width:60px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-u4"><div class="rk-cf-dot"><span class="rk-cf-tail"></span></div></div></div>
+          <div class="rk-cf-line" style="left:820px; top:80px; width:1px; height:110px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-u5"><div class="rk-cf-dot"></div></div></div>
+          <div class="rk-cf-line" style="left:760px; top:300px; width:60px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-l4"><div class="rk-cf-dot rk-cf-dot-amber"><span class="rk-cf-tail rk-cf-tail-amber"></span></div></div></div>
+          <div class="rk-cf-line" style="left:820px; top:190px; width:1px; height:110px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-l5"><div class="rk-cf-dot rk-cf-dot-amber"></div></div></div>
+          <div class="rk-cf-line" style="left:820px; top:190px; width:30px; height:1px"><div class="rk-cf-anim rk-cf-rider rk-cf-r-f"><div class="rk-cf-dot"><span class="rk-cf-tail"></span></div></div></div>
+
+          <!-- 1 · incoming call -->
+          <div style="position:absolute; left:10px; top:96px; width:180px; height:28px">
+            <div class="rk-cf-anim rk-cf-capa" style="position:absolute; left:0; right:0; top:0; text-align:center"><span style="display:inline-block; padding:4px 10px; border:1px solid rgba(110,231,183,.35); border-radius:6px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#ededed; white-space:nowrap">“Saturday hours?”</span></div>
+            <div class="rk-cf-anim rk-cf-capb" style="position:absolute; left:0; right:0; top:0; text-align:center"><span style="display:inline-block; padding:4px 10px; border:1px solid rgba(245,158,11,.45); border-radius:6px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#f59e0b; white-space:nowrap">“New kitchen remodel”</span></div>
+          </div>
+          <div class="rk-cf-anim rk-cf-rip1" style="position:absolute; left:56px; top:146px; width:88px; height:88px; border-radius:50%; border:1px solid rgba(110,231,183,.3)"></div>
+          <div class="rk-cf-anim rk-cf-rip2" style="position:absolute; left:56px; top:146px; width:88px; height:88px; border-radius:50%; border:1px solid rgba(110,231,183,.3)"></div>
+          <div class="rk-cf-anim rk-cf-rip3" style="position:absolute; left:56px; top:146px; width:88px; height:88px; border-radius:50%; border:1px solid rgba(110,231,183,.3)"></div>
+          <div style="position:absolute; left:56px; top:146px; width:88px; height:88px; border-radius:50%; border:1px solid rgba(255,255,255,.12); background:#121316; display:flex; align-items:center; justify-content:center; color:#6ee7b7">
+            <div class="rk-cf-anim rk-cf-callglow" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; border-radius:50%; border:1px solid #6ee7b7"></div>
+            <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
+          </div>
+          <p style="position:absolute; left:0; top:248px; width:200px; margin:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em; color:#a3a7ad; white-space:nowrap">INCOMING · <span style="color:#ededed">(805) 555-0142</span></p>
+
+          <!-- 2 · AI triage -->
+          <div style="position:absolute; left:280px; top:20px; width:200px; display:flex; flex-direction:column; align-items:center; gap:6px">
+            <span class="rk-cf-anim rk-cf-chip1" style="display:inline-block; padding:3px 9px; border:1px solid rgba(255,255,255,.09); border-radius:6px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.4; color:#ededed; white-space:nowrap"><span style="color:#a3a7ad">caller:</span> known</span>
+            <span class="rk-cf-anim rk-cf-chip2" style="display:inline-block; padding:3px 9px; border:1px solid rgba(255,255,255,.09); border-radius:6px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.4; color:#ededed; white-space:nowrap"><span style="color:#a3a7ad">intent:</span> quote</span>
+            <span class="rk-cf-anim rk-cf-chip3" style="display:inline-block; padding:3px 9px; border:1px solid rgba(255,255,255,.09); border-radius:6px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.4; color:#ededed; white-space:nowrap"><span style="color:#a3a7ad">job:</span> Oakridge kitchen remodel</span>
+          </div>
+          <div class="rk-cf-anim rk-cf-spin" style="position:absolute; left:318px; top:128px; width:124px; height:124px; border-radius:50%; border:1px dashed rgba(110,231,183,.6); opacity:.3"></div>
+          <div style="position:absolute; left:345px; top:155px; width:70px; height:70px; border-radius:8px; border:1px solid rgba(255,255,255,.12); background:#121316">
+            <div class="rk-cf-anim rk-cf-triglow" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; border-radius:8px; border:1px solid #6ee7b7"></div>
+          </div>
+          <div style="position:absolute; left:367px; top:177px; width:26px; height:26px; color:#6ee7b7"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+          <p style="position:absolute; left:280px; top:264px; width:200px; margin:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:11px; letter-spacing:.1em; color:#6ee7b7">AI READS THE CALL</p>
+
+          <!-- 3a · AI assistant (upper, mint) -->
+          <p style="position:absolute; left:560px; top:24px; width:200px; margin:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.14em; color:#6ee7b7">HANDLED BY AI</p>
+          <div class="rk-cf-anim rk-cf-aidim" style="position:absolute; left:560px; top:50px; width:200px; height:60px; display:flex; align-items:center; gap:12px; padding:0 16px; background:#121316; border:1px solid rgba(255,255,255,.12); border-radius:8px; color:#6ee7b7">
+            <div class="rk-cf-anim rk-cf-aiglow" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; border-radius:8px; border:1px solid #6ee7b7"></div>
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="8" width="14" height="11" rx="2"></rect><path d="M12 4v4M9 13h.01M15 13h.01M10 16h4"></path></svg>
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#ededed">AI assistant</span>
+          </div>
+
+          <!-- 3b · live rep (lower, amber = human) -->
+          <div class="rk-cf-anim rk-cf-repdim" style="position:absolute; left:560px; top:270px; width:200px; height:60px; display:flex; align-items:center; gap:12px; padding:0 16px; background:#121316; border:1px solid rgba(255,255,255,.12); border-radius:8px; color:#f59e0b">
+            <div class="rk-cf-anim rk-cf-repglow" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; border-radius:8px; border:1px solid #f59e0b"></div>
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 13v-1a8 8 0 0 1 16 0v1"></path><rect x="3" y="13" width="4" height="6" rx="1"></rect><rect x="17" y="13" width="4" height="6" rx="1"></rect><path d="M19 19a4 4 0 0 1-4 3h-2"></path></svg>
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#ededed">Live rep</span>
+          </div>
+          <p style="position:absolute; left:530px; top:340px; width:260px; margin:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#f59e0b; white-space:nowrap">BRIEFED REP · YOUR TEAM OR OURS</p>
+
+          <!-- 4 · outcome -->
+          <p style="position:absolute; left:830px; top:88px; width:210px; margin:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#a3a7ad; white-space:nowrap">EVERY CALL → AN OUTCOME</p>
+          <div style="position:absolute; left:850px; top:115px; width:190px; height:150px; border:1px dashed rgba(255,255,255,.12); border-radius:8px; perspective:600px">
+            <div class="rk-cf-anim rk-cf-tka" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; padding:14px 16px; background:#17181c; border:1px solid rgba(110,231,183,.6); border-radius:8px; transform-origin:left center">
+              <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; letter-spacing:.02em; color:#6ee7b7">ANSWERED</p>
+              <div style="margin:9px 0; height:1px; background:rgba(255,255,255,.09)"></div>
+              <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#ededed">Open Sat 8–2</p>
+              <p style="margin:5px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">note sent to owner</p>
+              <p style="margin:5px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">1 min · AI · $0.05</p>
+            </div>
+            <div class="rk-cf-anim rk-cf-tkb" style="position:absolute; left:-1px; top:-1px; right:-1px; bottom:-1px; padding:14px 16px; background:#17181c; border:1px solid #f59e0b; border-radius:8px; transform-origin:left center; overflow:hidden">
+              <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; letter-spacing:.02em; color:#f59e0b">ESTIMATE BOOKED</p>
+              <div style="margin:9px 0; height:1px; background:rgba(245,158,11,.25)"></div>
+              <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#ededed">$18,400 estimate</p>
+              <p style="margin:5px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">added to CRM</p>
+              <p style="margin:5px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">6 min · live rep · $3.00</p>
+              <div class="rk-cf-anim rk-cf-flash" style="position:absolute; left:0; top:0; right:0; bottom:0; background:rgba(245,158,11,.25); pointer-events:none"></div>
+            </div>
+          </div>
+         </div>
+
+         <!-- phone: simplified static stack -->
+         <div class="rk-cf-mobile" style="display:none; flex-direction:column; align-items:center">
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; width:100%; max-width:340px; background:#121316; border:1px solid rgba(255,255,255,.12); border-radius:8px; color:#6ee7b7">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
+            <div><p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em; color:#a3a7ad">INCOMING · (805) 555-0142</p><p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#f59e0b">“New kitchen remodel”</p></div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,.12)"></div>
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; width:100%; max-width:340px; background:#121316; border:1px solid rgba(110,231,183,.6); border-radius:8px; color:#6ee7b7">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <div><p style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; letter-spacing:.02em; color:#ededed">AI READS THE CALL</p><p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#a3a7ad">caller: known · intent: quote · job: Oakridge kitchen remodel</p></div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,.12)"></div>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; width:100%; max-width:340px">
+            <div style="padding:12px; background:#121316; border:1px solid rgba(255,255,255,.12); border-radius:8px; color:#6ee7b7">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="8" width="14" height="11" rx="2"></rect><path d="M12 4v4M9 13h.01M15 13h.01M10 16h4"></path></svg>
+              <p style="margin:6px 0 0; font-family:'Space Grotesk',sans-serif; font-size:13px; color:#ededed">AI assistant</p>
+              <p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; color:#6ee7b7">HANDLED BY AI</p>
+            </div>
+            <div style="padding:12px; background:#121316; border:1px solid rgba(245,158,11,.5); border-radius:8px; color:#f59e0b">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 13v-1a8 8 0 0 1 16 0v1"></path><rect x="3" y="13" width="4" height="6" rx="1"></rect><rect x="17" y="13" width="4" height="6" rx="1"></rect><path d="M19 19a4 4 0 0 1-4 3h-2"></path></svg>
+              <p style="margin:6px 0 0; font-family:'Space Grotesk',sans-serif; font-size:13px; color:#ededed">Live rep</p>
+              <p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; color:#f59e0b">BRIEFED REP · YOUR TEAM OR OURS</p>
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,.12)"></div>
+          <p style="margin:0 0 8px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#a3a7ad">EVERY CALL → AN OUTCOME</p>
+          <div style="width:100%; max-width:340px; padding:14px 18px; background:#121316; border:1px solid #f59e0b; border-radius:8px">
+            <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; letter-spacing:.02em; color:#f59e0b">ESTIMATE BOOKED</p>
+            <p style="margin:6px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad"><span style="color:#ededed">$18,400 estimate</span> · added to CRM</p>
+            <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">6 min · live rep · $3.00</p>
+          </div>
+         </div>
+        </div>
+      </div>
+    </sc-if>
+    </div>
+
+    <!-- DEVELOPERS VIEW (static site: this div starts hidden; site-js/home.js toggles it) -->
+    <div data-rk-view="devs" style="width:100%">
+    <sc-if value="{{isDevs}}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex; flex-direction:column; align-items:center; text-align:center">
+        <p style="margin:0 0 20px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">STRIPE FOR VOICE</p>
+        <h1 style="margin:0; max-width:900px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(36px, 7vw, 64px); line-height:1.08; letter-spacing:-0.015em; color:#ededed">Business phone infrastructure, agent-first.</h1>
+        <p style="margin:24px 0 0; max-width:620px; font-size:19px; color:#a3a7ad">Numbers, calling, AI triage and human reps behind one API. Pay per minute, no platform fee.</p>
+        <div style="margin-top:36px; display:flex; flex-wrap:wrap; justify-content:center; gap:14px">
+          <a href="Docs.dc.html" class="rk-btn rk-btn-primary" style="display:inline-flex; align-items:center; gap:10px; min-height:52px; padding:0 22px; border:1px solid #6ee7b7; border-radius:8px; background:#6ee7b7; font-family:Inter,sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#0a0a0a">
+            Read the docs
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="Signup.dc.html" class="rk-btn rk-btn-ghost" style="display:inline-flex; align-items:center; min-height:52px; padding:0 22px; border:1px solid rgba(255,255,255,.16); border-radius:8px; background:transparent; font-family:Inter,sans-serif; font-size:15px; font-weight:500; text-decoration:none; color:#ededed">Get an API key</a>
+        </div>
+
+        <div style="margin:56px auto 0; width:100%; max-width:820px; text-align:left; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:12px 20px; border-bottom:1px solid rgba(255,255,255,.09)">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">ringkit.js</span>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">npm install ringkit</span>
+          </div>
+          <pre class="rk-code" style="margin:0; padding:20px; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:14px; line-height:1.8; color:#ededed"><code><span style="color:#6ee7b7">const</span> line = <span style="color:#6ee7b7">await</span> ringkit.lines.create({
+  business: <span style="color:#d1fae5">"hidden-valley-builders"</span>,
+  brief: { site: <span style="color:#d1fae5">"hiddenvalleybuilders.com"</span>, crm: <span style="color:#d1fae5">"jobber"</span> },
+  route: { simple: <span style="color:#d1fae5">"ai"</span>, quotes: <span style="color:#d1fae5">"ringkit-reps"</span>, new_jobs: <span style="color:#d1fae5">"owner"</span> }
+})
+<span style="color:#a3a7ad">// webhooks: call.routed → call.completed → call.summarized</span></code></pre>
+          <div class="rk-g3" style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); border-top:1px solid rgba(255,255,255,.09)">
+            <div style="padding:14px 20px">
+              <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Platform fee</p>
+              <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#ededed">$0</p>
+            </div>
+            <div class="rk-pane2" style="padding:14px 20px; border-left:1px solid rgba(255,255,255,.09)">
+              <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">AI answering</p>
+              <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#6ee7b7">$0.05/min</p>
+            </div>
+            <div class="rk-pane2" style="padding:14px 20px; border-left:1px solid rgba(255,255,255,.09)">
+              <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Live rep</p>
+              <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#f59e0b">$0.50/min</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ VALUE STRIP ============ -->
+<section aria-label="What Ringkit does" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <div class="rk-g4" style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:24px">
+    <article class="rk-card" style="padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#6ee7b7">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>
+      </div>
+      <p style="margin:22px 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; color:#a3a7ad">01</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">Answered on the first ring, every time we're forwarded</h2>
+      <p style="margin:12px 0 0; color:#a3a7ad">Real people pick up when you can't — on a job, on a roof, after hours. No contract, no platform fee: pay per minute, only for calls we handle.</p>
+    </article>
+    <article class="rk-card" style="padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#6ee7b7">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h5M15 12h5M12 4v5M12 15v5"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </div>
+      <p style="margin:22px 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; color:#a3a7ad">02</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">Briefed on your business</h2>
+      <p style="margin:12px 0 0; color:#a3a7ad">Before anyone answers, our AI learns your website, services, pricing, hours, crew and current jobs — so whoever picks up sounds like they work for you.</p>
+    </article>
+    <article class="rk-card" style="padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#6ee7b7">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4H5v16h3M16 4h3v16h-3"></path><path d="M9 9h6M9 12h6M9 15h4"></path></svg>
+      </div>
+      <p style="margin:22px 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; color:#a3a7ad">03</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">Every call → notes &amp; next steps</h2>
+      <p style="margin:12px 0 0; color:#a3a7ad">Who called, what they wanted, what happens next — sent to you by text and email, ready to become an estimate, a task or a follow-up.</p>
+    </article>
+    <article class="rk-card" style="padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#6ee7b7">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"></path></svg>
+      </div>
+      <p style="margin:22px 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; color:#a3a7ad">04</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">Drops into anything</h2>
+      <p style="margin:12px 0 0; color:#a3a7ad">Your website, your app, your AI agent, your CRM. Starting a business this week? Your phone layer works on day one.</p>
+    </article>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ ROUTING ============ -->
+<section id="how" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">SMART ROUTING</p>
+  <h2 style="margin:0; max-width:760px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">The right call goes to the right person.</h2>
+  <p style="margin:18px 0 0; max-width:640px; font-size:17px; color:#a3a7ad">Simple calls get handled on the spot. The ones that matter go to the right person — your team or ours — at the right level, with the details already in front of them.</p>
+
+  <!-- two views: rep + code -->
+  <div style="margin-top:48px; width:100%; text-align:left; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+    <div style="display:flex; flex-wrap:wrap; align-items:stretch; border-bottom:1px solid rgba(255,255,255,.09)">
+      <span style="display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border-right:1px solid rgba(255,255,255,.09); border-bottom:2px solid #6ee7b7; margin-bottom:-1px; background:#17181c; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#ededed">What your rep sees</span>
+      <span style="display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border-right:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#a3a7ad">What your code sees</span>
+    </div>
+    <div class="rk-g2" style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr))">
+      <div style="min-width:0">
+        <p style="margin:0; padding:14px 20px 0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">live-call-brief</p>
+        <pre class="rk-code" style="margin:0; padding:12px 20px 24px; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.75; color:#ededed"><code><span style="color:#6ee7b7">INBOUND</span> · (805) 555-0142 · Hidden Valley Builders
+<span style="color:#a3a7ad">Caller     </span> known customer · 2 past jobs
+<span style="color:#a3a7ad">Business   </span> remodels, additions, repairs · Mon–Sat 7–5 · Ventura County
+<span style="color:#a3a7ad">Open jobs  </span> <span style="color:#d1fae5">"Oakridge kitchen remodel — framing stage"</span>
+<span style="color:#a3a7ad">Pricing    </span> <span style="color:#d1fae5">$95/hr labor · free estimates</span>
+<span style="color:#a3a7ad">Routing    </span> <span style="color:#f59e0b">HUMAN · Tier 3 — owner</span>
+<span class="rk-cursor" aria-hidden="true"></span></code></pre>
+      </div>
+      <div class="rk-pane2" style="min-width:0; border-left:1px solid rgba(255,255,255,.09)">
+        <p style="margin:0; padding:14px 20px 0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">ringkit.js</p>
+        <pre class="rk-code" style="margin:0; padding:12px 20px 24px; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.75; color:#ededed"><code><span style="color:#a3a7ad">// one call to get a number that's answered</span>
+<span style="color:#6ee7b7">const</span> line = <span style="color:#6ee7b7">await</span> ringkit.lines.create({
+  business: <span style="color:#d1fae5">"hidden-valley-builders"</span>,
+  brief: { site: <span style="color:#d1fae5">"hiddenvalleybuilders.com"</span>, crm: <span style="color:#d1fae5">"jobber"</span> },
+  route: { simple: <span style="color:#d1fae5">"ai"</span>, quotes: <span style="color:#d1fae5">"ringkit-reps"</span>, new_jobs: <span style="color:#d1fae5">"owner"</span> }
+})
+<span style="color:#a3a7ad">// after every call → summary, intent, next_actions</span></code></pre>
+      </div>
+    </div>
+  </div>
+  <p style="margin:14px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.08em; color:#a3a7ad">Same product. The owner sees a briefed rep. The developer sees one API call.</p>
+
+  <!-- routing diagram -->
+  <div class="rk-flow" style="margin-top:64px; display:flex; align-items:center; gap:0">
+    <div style="flex:0 0 auto; padding:22px; min-width:180px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="display:flex; align-items:center; gap:10px; color:#6ee7b7">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path><path d="M15 3v6h6"></path></svg>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase">Inbound</span>
+      </div>
+      <p style="margin:10px 0 0; font-family:'Space Grotesk',sans-serif; font-size:17px; color:#ededed">Incoming call</p>
+      <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">"Looking to redo our kitchen…"</p>
+    </div>
+
+    <div class="rk-conn-h rk-signal" aria-hidden="true" style="flex:1 1 40px; min-width:32px; height:1px; background:rgba(255,255,255,.12)"></div>
+
+    <div class="rk-pulse" style="flex:0 0 auto; padding:24px 26px; min-width:200px; background:#121316; border:1px solid #6ee7b7; border-radius:8px; text-align:center">
+      <div style="display:flex; justify-content:center; color:#6ee7b7">
+        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </div>
+      <p style="margin:10px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; color:#ededed">AI reads the call</p>
+      <p style="margin:4px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em; color:#a3a7ad">who · what · how big</p>
+    </div>
+
+    <div class="rk-conn-h rk-signal" aria-hidden="true" style="flex:1 1 40px; min-width:32px; height:1px; background:rgba(255,255,255,.12)"></div>
+
+    <div class="rk-outs" style="flex:0 1 400px; display:flex; position:relative">
+      <div class="rk-out-conn" aria-hidden="true" style="flex:0 0 1px; margin:42px 0; background:rgba(255,255,255,.12)"></div>
+      <div style="flex:1 1 auto; display:flex; flex-direction:column; gap:14px">
+        <div style="display:flex; align-items:center">
+          <div class="rk-out-conn" aria-hidden="true" style="width:24px; height:1px; background:rgba(110,231,183,.5)"></div>
+          <div style="flex:1 1 auto; display:flex; align-items:center; gap:12px; padding:14px 16px; min-height:60px; background:#121316; border:1px solid rgba(110,231,183,.35); border-radius:8px">
+            <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="8" width="14" height="11" rx="2"></rect><path d="M12 4v4M9 13h.01M15 13h.01M10 16h4"></path></svg></span>
+            <div style="flex:1 1 auto; min-width:0">
+              <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:15px; color:#ededed">Handled on the spot</p>
+              <p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">FAQs, hours, directions, messages</p>
+            </div>
+            <span style="flex:0 0 auto; padding:2px 7px; border:1px solid rgba(110,231,183,.45); border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.12em; color:#6ee7b7">AI</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center">
+          <div class="rk-out-conn" aria-hidden="true" style="width:24px; height:1px; background:rgba(245,158,11,.5)"></div>
+          <div style="flex:1 1 auto; display:flex; align-items:center; gap:12px; padding:14px 16px; min-height:60px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+            <span style="color:#f59e0b; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 13v-1a8 8 0 0 1 16 0v1"></path><rect x="3" y="13" width="4" height="6" rx="1"></rect><rect x="17" y="13" width="4" height="6" rx="1"></rect></svg></span>
+            <div style="flex:1 1 auto; min-width:0">
+              <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:15px; color:#ededed">Our team</p>
+              <p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">briefed Ringkit rep books, quotes, schedules</p>
+            </div>
+            <span style="flex:0 0 auto; padding:2px 7px; border:1px solid rgba(245,158,11,.5); border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.12em; color:#f59e0b">HUMAN</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center">
+          <div class="rk-out-conn" aria-hidden="true" style="width:24px; height:1px; background:rgba(245,158,11,.5)"></div>
+          <div style="flex:1 1 auto; display:flex; align-items:center; gap:12px; padding:14px 16px; min-height:60px; background:#121316; border:1px solid rgba(245,158,11,.4); border-radius:8px">
+            <span style="color:#f59e0b; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg></span>
+            <div style="flex:1 1 auto; min-width:0">
+              <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:15px; color:#ededed">You / your team</p>
+              <p style="margin:2px 0 0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">new jobs, big customers, your picks</p>
+            </div>
+            <span style="flex:0 0 auto; padding:2px 7px; border:1px solid rgba(245,158,11,.5); border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.12em; color:#f59e0b">HUMAN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px; padding:18px 20px; max-width:820px; border:1px solid rgba(255,255,255,.09); border-radius:8px; background:#121316; display:flex; flex-wrap:wrap; gap:14px; align-items:flex-start">
+    <span style="flex:0 0 auto; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad; padding-top:2px">Example</span>
+    <p style="margin:0; flex:1 1 280px; color:#a3a7ad">You're a contractor and your phone rings mid-job. "Are you open Saturday?" gets answered on the spot. A new kitchen remodel inquiry goes straight to you — or a senior rep — with the project details already up.</p>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ CALL → NOTES ============ -->
+<section id="notes" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <div class="rk-g2" style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:56px; align-items:center">
+    <div>
+      <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">CALL → NOTES</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">Every call becomes notes.</h2>
+      <p style="margin:18px 0 0; font-size:17px; color:#a3a7ad">When a call ends, you get clean notes: who called, what they wanted, the details that matter, and what should happen next — sent to your phone and your CRM.</p>
+      <p style="margin:14px 0 0; font-size:17px; color:#a3a7ad">Turn it into an estimate, a task or a follow-up in a tap. No voicemails to dig through, no sticky notes to chase. Summaries are included on every call.</p>
+      <div style="margin-top:28px; display:flex; flex-wrap:wrap; gap:10px">
+        <span style="display:inline-flex; align-items:center; min-height:32px; padding:0 12px; border-radius:6px; border:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">Text</span>
+        <span style="display:inline-flex; align-items:center; min-height:32px; padding:0 12px; border-radius:6px; border:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">Email</span>
+        <span style="display:inline-flex; align-items:center; min-height:32px; padding:0 12px; border-radius:6px; border:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">Your CRM</span>
+        <span style="display:inline-flex; align-items:center; min-height:32px; padding:0 12px; border-radius:6px; border:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">call.summarized webhook</span>
+      </div>
+    </div>
+
+    <div style="min-width:0; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:14px 20px; border-bottom:1px solid rgba(255,255,255,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Call summary</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">routed → <span style="color:#f59e0b">owner</span> · 4m 12s</span>
+      </div>
+      <dl style="margin:0; padding:4px 20px 8px; font-family:'IBM Plex Mono',monospace; font-size:13px">
+        <div style="display:grid; grid-template-columns:repeat(1, minmax(0, 1fr)); gap:6px; padding:16px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+          <dt style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Caller</dt>
+          <dd style="margin:0; color:#ededed; line-height:1.6">Dana Reyes · new customer · referred by a neighbor</dd>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(1, minmax(0, 1fr)); gap:6px; padding:16px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+          <dt style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Wanted</dt>
+          <dd style="margin:0; color:#6ee7b7">Estimate for a full kitchen remodel</dd>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(1, minmax(0, 1fr)); gap:8px; padding:16px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+          <dt style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Details</dt>
+          <dd style="margin:0; display:flex; flex-wrap:wrap; gap:8px">
+            <span style="padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,.09); color:#ededed">budget: ~$40k</span>
+            <span style="padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,.09); color:#ededed">start: spring</span>
+            <span style="padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,.09); color:#ededed">scope: kitchen</span>
+            <span style="padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,.09); color:#ededed">site visit: yes</span>
+          </dd>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(1, minmax(0, 1fr)); gap:8px; padding:16px 0">
+          <dt style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Next steps</dt>
+          <dd style="margin:0">
+            <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; color:#ededed">
+              <li style="display:flex; gap:10px; align-items:flex-start"><span style="color:#6ee7b7" aria-hidden="true">›</span>Book a site visit this week</li>
+              <li style="display:flex; gap:10px; align-items:flex-start"><span style="color:#6ee7b7" aria-hidden="true">›</span>Send portfolio of past kitchens</li>
+              <li style="display:flex; gap:10px; align-items:flex-start"><span style="color:#6ee7b7" aria-hidden="true">›</span>Draft estimate after walkthrough</li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ HUMANS ============ -->
+<section id="humans" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <div class="rk-g2" style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:56px; align-items:start">
+    <div>
+      <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">HUMANS IN THE LOOP, ON PURPOSE</p>
+      <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">Bots for the easy calls, people for the ones that matter.</h2>
+      <p style="margin:18px 0 0; font-size:17px; color:#a3a7ad">Bot-only answering services put every caller through the same script — including the customer about to hand you a remodel. Ringkit lets AI take the hours-and-directions calls and puts a briefed person on the quote, the complaint and the new job.</p>
+      <p style="margin:14px 0 0; font-size:17px; color:#a3a7ad">It isn't "replace your front desk with a robot." It's a front desk that knows your business, available the minute you need it.</p>
+    </div>
+    <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:16px">
+      <li class="rk-card" style="display:flex; gap:18px; align-items:flex-start; padding:22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="flex:0 0 auto; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#f59e0b"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3"></circle><path d="M3 20a6 6 0 0 1 12 0"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M16 14.5a5 5 0 0 1 5 5.5"></path></svg></span>
+        <div>
+          <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:16px; color:#ededed">Our reps or yours — your call</p>
+          <p style="margin:6px 0 0; color:#a3a7ad">Send calls to Ringkit's on-demand reps, to your own team, or a mix. Change it any time.</p>
+        </div>
+      </li>
+      <li class="rk-card" style="display:flex; gap:18px; align-items:flex-start; padding:22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="flex:0 0 auto; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#f59e0b"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 13v-1a8 8 0 0 1 16 0v1"></path><rect x="3" y="13" width="4" height="6" rx="1"></rect><rect x="17" y="13" width="4" height="6" rx="1"></rect><path d="M19 19a4 4 0 0 1-4 3h-2"></path></svg></span>
+        <div>
+          <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:16px; color:#ededed">Briefed before they pick up</p>
+          <p style="margin:6px 0 0; color:#a3a7ad">Your services, pricing, hours and open jobs are on screen before the first hello. Live reps are $0.50/min, billed only when we answer.</p>
+        </div>
+      </li>
+      <li class="rk-card" style="display:flex; gap:18px; align-items:flex-start; padding:22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="flex:0 0 auto; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid rgba(255,255,255,.09); color:#6ee7b7"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"></path></svg></span>
+        <div>
+          <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:16px; color:#ededed">Your best people only take the calls that matter</p>
+          <p style="margin:6px 0 0; color:#a3a7ad">Routine calls never reach you or your senior people, so you're free when the big job calls.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ BUILD ON IT ============ -->
+<section id="build" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">BUILD ON IT</p>
+  <h2 style="margin:0; max-width:820px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">Built for owners who build — and the developers they hire.</h2>
+  <p style="margin:18px 0 0; max-width:660px; font-size:17px; color:#a3a7ad">Whether you're wiring it up yourself with an AI assistant or handing it to a developer, Ringkit is the phone layer you plug in on day one.</p>
+
+  <div class="rk-g2" style="margin-top:56px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:24px; align-items:stretch">
+    <div class="rk-card" style="min-width:0; padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#6ee7b7">Owners</p>
+      <h3 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">If you're learning AI</h3>
+      <ul style="margin:24px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:16px">
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">No-code setup from your website URL.</span> Paste your site; we build the brief your reps read.</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Connect your tools.</span> HubSpot, Jobber, Housecall Pro, Google Calendar, Slack, email &amp; SMS.</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Copy-paste a widget into your site.</span> Click-to-call and callback requests, answered by your briefed line.</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Ask your AI assistant to wire it up.</span> It works with OpenAI Agents, LangChain, Vercel AI SDK and MCP.</span></li>
+      </ul>
+      <a href="Signup.dc.html" style="margin-top:24px; display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:15px; font-weight:500; text-decoration:none">Set up your line
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+
+    <div class="rk-card" style="min-width:0; padding:32px 28px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#6ee7b7">Developers</p>
+      <h3 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:20px; line-height:1.3; color:#ededed">If you're a developer</h3>
+      <ul style="margin:24px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:12px; font-size:15px">
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">REST API &amp; SDKs</span> — JS, Python</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad; min-width:0"><span style="color:#ededed">Webhooks</span> — <code style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7">call.routed</code> · <code style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7">call.completed</code> · <code style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6ee7b7">call.summarized</code></span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">SIP &amp; number porting</span> — keep your existing number. Porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Bring your own LLM</span> for the brief</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Sandbox numbers</span> to test before you go live</span></li>
+        <li style="display:flex; gap:12px; align-items:flex-start"><span style="color:#6ee7b7; font-family:'IBM Plex Mono',monospace" aria-hidden="true">›</span><span style="color:#a3a7ad"><span style="color:#ededed">Usage-based</span> — no seat licenses, no platform fee</span></li>
+      </ul>
+      <div style="margin-top:24px; background:#0a0a0a; border:1px solid rgba(255,255,255,.09); border-radius:6px">
+        <pre style="margin:0; padding:14px 16px; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.75; color:#ededed"><code><span style="color:#6ee7b7">$</span> npm install ringkit
+<span style="color:#6ee7b7">$</span> pip install ringkit</code></pre>
+      </div>
+      <a href="Docs.dc.html" style="margin-top:16px; display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:15px; font-weight:500; text-decoration:none">Read the docs
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ INTEGRATIONS ============ -->
+<section id="integrations" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">INTEGRATIONS</p>
+  <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">Works with what you already use.</h2>
+  <p style="margin:18px 0 0; max-width:620px; font-size:17px; color:#a3a7ad">Notes land where you already work. Keep your number, keep your tools — no phone system to install. Full reference in the <a href="Docs.dc.html">docs</a>.</p>
+  <div class="rk-g4" style="margin-top:48px; display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:20px">
+    <article class="rk-card" style="padding:26px 22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"></path></svg></span>
+      <h3 style="margin:18px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:16px; color:#ededed">Website &amp; app widget</h3>
+      <p style="margin:8px 0 0; font-size:15px; color:#a3a7ad">Paste a snippet into your site or app — callers reach your briefed line in one tap.</p>
+    </article>
+    <article class="rk-card" style="padding:26px 22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="17" r="2.5"></circle><circle cx="18" cy="17" r="2.5"></circle><circle cx="12" cy="6" r="2.5"></circle><path d="M10.7 8.2 7.3 14.8M13.3 8.2l3.4 6.6M8.5 17h7"></path></svg></span>
+      <h3 style="margin:18px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:16px; color:#ededed">CRM, scheduling, email &amp; text</h3>
+      <p style="margin:8px 0 0; font-size:15px; color:#a3a7ad">Calls, notes and bookings flow into HubSpot, Jobber, Housecall Pro, Google Calendar, Slack, email &amp; SMS.</p>
+    </article>
+    <article class="rk-card" style="padding:26px 22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M9 9h6v6H9zM9 1.5V4M15 1.5V4M9 20v2.5M15 20v2.5M1.5 9H4M1.5 15H4M20 9h2.5M20 15h2.5"></path></svg></span>
+      <h3 style="margin:18px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:16px; color:#ededed">Agent frameworks &amp; MCP</h3>
+      <p style="margin:8px 0 0; font-size:15px; color:#a3a7ad">Let your AI agent place and take calls with OpenAI Agents, LangChain, Vercel AI SDK or MCP.</p>
+    </article>
+    <article class="rk-card" style="padding:26px 22px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+      <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path><path d="M16 3h5v5M21 3l-6 6"></path></svg></span>
+      <h3 style="margin:18px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:16px; color:#ededed">Your existing number</h3>
+      <p style="margin:8px 0 0; font-size:15px; color:#a3a7ad">Keep the number your customers know. Porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</p>
+    </article>
+  </div>
+</section>
+
+<div class="rk-hair" aria-hidden="true" style="max-width:1200px; margin:0 auto"></div>
+
+<!-- ============ PRICING TEASER ============ -->
+<section id="pricing" class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px">
+  <div style="text-align:center">
+    <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">PRICING</p>
+    <h2 style="margin:0 auto; max-width:760px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 4vw, 40px); line-height:1.2; letter-spacing:-0.01em; color:#ededed">No contract. A dollar for the number, then pay for minutes.</h2>
+  </div>
+  <div style="margin:48px auto 0; max-width:560px; padding:40px 32px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+    <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">Platform fee</p>
+    <p style="margin:8px 0 0; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap">
+      <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(48px, 9vw, 72px); line-height:1; letter-spacing:-0.02em; color:#ededed">$0</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:16px; color:#a3a7ad">/ month</span>
+    </p>
+    <div class="rk-hair" aria-hidden="true" style="margin:32px 0 8px"></div>
+    <dl style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:14px">
+      <div style="display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+        <dt style="color:#a3a7ad">Your number</dt><dd style="margin:0; color:#ededed; text-align:right">$1/month</dd>
+      </div>
+      <div style="display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+        <dt style="color:#a3a7ad">AI answering</dt><dd style="margin:0; color:#ededed; text-align:right">$0.05/min</dd>
+      </div>
+      <div style="display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,.06)">
+        <dt style="color:#a3a7ad">Live rep</dt><dd style="margin:0; color:#f59e0b; text-align:right">$0.50/min</dd>
+      </div>
+      <div style="display:flex; justify-content:space-between; gap:16px; padding:14px 0">
+        <dt style="color:#a3a7ad">Call notes &amp; summaries</dt><dd style="margin:0; color:#6ee7b7; text-align:right">included</dd>
+      </div>
+    </dl>
+    <div style="margin-top:20px; padding:14px 16px; background:#17181c; border:1px solid rgba(255,255,255,.09); border-radius:8px; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1.7">
+      <p style="margin:0; color:#a3a7ad">5-min AI-handled call <span style="color:#ededed">= $0.25</span></p>
+      <p style="margin:0; color:#a3a7ad">6-min live-rep quote call <span style="color:#ededed">= $3.00</span></p>
+    </div>
+    <p style="margin:14px 0 0; font-size:14px; color:#a3a7ad">Billed per minute, rounded up to the next minute. No contracts.</p>
+    <div class="rk-price-row" style="margin-top:28px; display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+      <a href="Signup.dc.html" class="rk-btn rk-btn-primary" style="flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 22px; border:1px solid #6ee7b7; border-radius:8px; background:#6ee7b7; font-family:Inter,sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#0a0a0a">Get started</a>
+      <a href="Pricing.dc.html" class="rk-btn rk-btn-ghost" style="flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 22px; border:1px solid rgba(255,255,255,.16); border-radius:8px; background:transparent; font-family:Inter,sans-serif; font-size:15px; font-weight:500; text-decoration:none; color:#ededed">See pricing &amp; calculator</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<section id="trust" aria-label="Trust and security" style="border-top:1px solid rgba(255,255,255,.09)">
+  <div class="rk-section" style="max-width:1200px; margin:0 auto; padding:64px 16px">
+    <div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px">
+      <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">TRUST</p>
+      <a href="Security.dc.html" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:14px; font-weight:500; text-decoration:none">Security &amp; compliance
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+    <div class="rk-g4" style="margin-top:20px; display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:20px">
+      <div style="padding:20px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg></span>
+        <h3 style="margin:14px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:15px; color:#ededed">Recording &amp; consent</h3>
+        <p style="margin:6px 0 0; font-size:14px; color:#a3a7ad">Calls are recorded and transcribed to make the summary. Ringkit plays a consent notice on every call and follows two-party-consent rules by state.</p>
+      </div>
+      <div style="padding:20px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+        <h3 style="margin:14px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:15px; color:#ededed">Data handling</h3>
+        <p style="margin:6px 0 0; font-size:14px; color:#a3a7ad">Your business brief, call recordings and summaries are encrypted at rest and in transit, and never used to train models for anyone else.</p>
+      </div>
+      <div style="padding:20px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path><path d="M16 3h5v5M21 3l-6 6"></path></svg></span>
+        <h3 style="margin:14px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:15px; color:#ededed">Number porting</h3>
+        <p style="margin:6px 0 0; font-size:14px; color:#a3a7ad">Keep your existing number. Porting is free and takes 3–10 business days with most US carriers; your old line keeps working until the port completes.</p>
+      </div>
+      <div style="padding:20px; background:#121316; border:1px solid rgba(255,255,255,.09); border-radius:8px">
+        <span style="color:#6ee7b7; display:flex"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l2-5 4 10 2-5h6"></path></svg></span>
+        <h3 style="margin:14px 0 0; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:15px; color:#ededed">Reliability</h3>
+        <p style="margin:6px 0 0; font-size:14px; color:#a3a7ad">Calls run on redundant carrier routes in multiple US regions. Status page and incident history are public.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section aria-label="Get started" style="border-top:1px solid rgba(255,255,255,.09); border-bottom:1px solid rgba(255,255,255,.09); background:#121316">
+  <div class="rk-section" style="max-width:1200px; margin:0 auto; padding:96px 16px; text-align:center">
+    <p style="margin:0 0 16px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#a3a7ad">READY WHEN YOU ARE</p>
+    <h2 style="margin:0 auto; max-width:760px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px, 5vw, 48px); line-height:1.15; letter-spacing:-0.01em; color:#ededed">Stop missing calls. Start today.</h2>
+    <p style="margin:18px auto 0; max-width:560px; font-size:17px; color:#a3a7ad">A number is $1 a month. Tell us about your business, forward your calls, and we'll pick up.</p>
+    <p style="margin:20px auto 0; max-width:620px; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.02em; color:#a3a7ad">Whether you're a one-person shop or shipping an app, your phone works today.</p>
+    <div style="margin-top:28px; display:flex; flex-wrap:wrap; justify-content:center; gap:14px">
+      <a href="Signup.dc.html" class="rk-btn rk-btn-primary" style="display:inline-flex; align-items:center; gap:10px; min-height:52px; padding:0 22px; border:1px solid #6ee7b7; border-radius:8px; background:#6ee7b7; font-family:Inter,sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#0a0a0a">
+        Get started
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="Docs.dc.html" class="rk-btn rk-btn-ghost" style="display:inline-flex; align-items:center; min-height:52px; padding:0 22px; border:1px solid rgba(255,255,255,.16); border-radius:8px; background:transparent; font-family:Inter,sans-serif; font-size:15px; font-weight:500; text-decoration:none; color:#ededed">Read the docs</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER (shared) ============ -->
+<footer style="background:#0a0a0a">
+  <div style="max-width:1200px; margin:0 auto; padding:56px 16px 40px">
+    <div class="rk-g4" style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:32px">
+      <div>
+        <a href="Main.dc.html" aria-label="ringkit home" style="display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#6ee7b7">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6ee7b7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 10h5"></path><path d="M6.5 10c2 0 2.6-4 5-4s2.6 1.6 5 1.6"></path><path d="M6.5 10c2 0 2.6 4 5 4s2.6-1.6 5-1.6"></path></svg>
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; letter-spacing:-0.02em; color:#6ee7b7">ringkit</span>
+        </a>
+        <p style="margin:8px 0 0; max-width:260px; font-size:14px; color:#a3a7ad">Business phone infrastructure. Stripe for voice.</p>
+      </div>
+      <nav aria-label="Product">
+        <p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed">Product</p>
+        <ul style="margin:0; padding:0; list-style:none">
+          <li><a href="Main.dc.html#how" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">How it works</a></li>
+          <li><a href="Pricing.dc.html" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Pricing</a></li>
+          <li><a href="Docs.dc.html" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Docs</a></li>
+          <li><a href="Main.dc.html#integrations" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Integrations</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company">
+        <p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed">Company</p>
+        <ul style="margin:0; padding:0; list-style:none">
+          <li><a href="Security.dc.html" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Security</a></li>
+          <li><a href="#" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Status</a></li>
+          <li><a href="#" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Work as a Ringkit rep</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Legal">
+        <p style="margin:0 0 6px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#ededed">Legal</p>
+        <ul style="margin:0; padding:0; list-style:none">
+          <li><a href="Terms.dc.html" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Terms</a></li>
+          <li><a href="Privacy.dc.html" class="rk-foot-link" style="display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; color:#a3a7ad">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p style="margin:40px 0 0; padding-top:20px; border-top:1px solid rgba(255,255,255,.09); font-family:'IBM Plex Mono',monospace; font-size:12px; color:#a3a7ad">© 2026 Ringkit</p>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":7900}}'>
+class Component extends DCLogic {
+renderVals() {
+const view = (this.state && this.state.view) || 'owners';
+const devs = view === 'devs';
+return {
+  isOwners: !devs,
+  isDevs: devs,
+  ownersPressed: devs ? 'false' : 'true',
+  devsPressed: devs ? 'true' : 'false',
+  showOwners: () => this.setState({ view: 'owners' }),
+  showDevs: () => this.setState({ view: 'devs' })
+};
+}
+}
+</script>
+</body>
+</html>
