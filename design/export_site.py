@@ -54,6 +54,8 @@ def flatten(name):
     for dc, (sf, _) in PAGES.items():
         src = src.replace(f'href="{dc}', f'href="{sf}')
         src = src.replace(f"href='{dc}", f"href='{sf}")
+    # static site starts on the Owners view; home.js toggles it
+    src = src.replace('<div data-rk-view="devs"', '<div data-rk-view="devs" hidden', 1)
     if js_file and os.path.exists(os.path.join(JS, js_file)):
         js = open(os.path.join(JS, js_file)).read()
         src = src.replace('</body>', f'<script>\n{js}\n</script>\n</body>')
